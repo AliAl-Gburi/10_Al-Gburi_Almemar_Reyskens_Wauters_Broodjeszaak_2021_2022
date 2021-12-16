@@ -4,12 +4,16 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;	
+import javafx.stage.StageStyle;
+import jxl.read.biff.BiffException;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 public class AdminView {
 	private Stage stage = new Stage();		
 		
-	public AdminView(){			
+	public AdminView() throws IOException, BiffException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 		stage.setTitle("ADMIN VIEW");
 		stage.initStyle(StageStyle.UTILITY);
 		stage.setX(680);
