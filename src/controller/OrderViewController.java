@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import model.BestelFacade;
 import model.Bestellijn;
@@ -31,6 +32,7 @@ public class OrderViewController implements Observer {
         nieuweBestelling();
         broodjeListener();
         belegListener();
+        voegZelfdeBestelling();
 
     }
 
@@ -80,12 +82,37 @@ public class OrderViewController implements Observer {
         }
     }
 
+    public void voegZelfdeBestelling() {
+        Alert a = new Alert(Alert.AlertType.ERROR);
+        view.getDuplicateOrderBtn().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(facade.getLijstBestellijnen().size() < 1) {
+                    a.setContentText("Er moet minimaal 1 broodje zijn voordat je het kunt dupliceren");
+                    a.show();
+                } else if(!facade.enoughtoDupe()) {
+                    a.setContentText("U bent niet op voorraad");
+                    a.show();
+                } else {
+                    facade.dupeOrder();
+                }
+            }
+        });
+    }
+
     public void voegBestelLijnToe(String naamBroodje) {
         facade.voegBestellijnToe(naamBroodje);
     }
 
     public void voegBelegToe(String naamBeleg) {
-        facade.voegBelegenToe(naamBeleg);
+        try {
+            facade.voegBelegenToe(naamBeleg);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setContentText("Aan een broodje hoeft geen beleg te worden toegevoegd.");
+            a.show();
+        }
+
     }
 
     private boolean availableBroodjeVoorraad(String item) {

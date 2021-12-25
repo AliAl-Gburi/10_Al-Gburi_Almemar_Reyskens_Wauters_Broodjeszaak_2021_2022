@@ -18,6 +18,10 @@ public class Bestelling {
         return this.bestellijnList;
     }
     public void voegBelegToe(String beleg) {
-        bestellijnList.get(bestellijnList.size() - 1).voegBelegToe(beleg);
+            getLastToegevoegdBestelling().voegBelegToe(beleg);
+    }
+
+    public Bestellijn getLastToegevoegdBestelling() {
+        return bestellijnList.get(bestellijnList.size() - 1);
     }
 }

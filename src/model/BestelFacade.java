@@ -13,6 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class BestelFacade implements Subject{
     private Bestelling bestelling;
@@ -35,6 +36,36 @@ public class BestelFacade implements Subject{
     public void nieuwBestelling() {
         bestelling = new Bestelling();
     }
+    public boolean enoughtoDupe() {
+        boolean res = true;
+        Bestellijn lastBestelling = bestelling.getLastToegevoegdBestelling();
+        if(broodjesDatabase.getVoorraadLijstBroodjes().get(lastBestelling.getNaamBroodje()) < 1) res = false;
+        String[] belegLijst = lastBestelling.getBelegsoorten().split(",");
+        Map<String, Integer> itemsinOrder = new TreeMap<>();
+        for(int i = 0; i < belegLijst.length; i++) {
+            if(!itemsinOrder.containsKey(belegLijst[i].trim())){
+                itemsinOrder.put(belegLijst[i].trim(), 1);
+            } else {
+                int xd = itemsinOrder.get(belegLijst[i].trim());
+                xd++;
+                itemsinOrder.put(belegLijst[i].trim() ,xd);
+            }
+        }
+
+        for (String beleg: itemsinOrder.keySet()) {
+            if(belegDatabase.getVoorraadLijstBelegen().get(beleg) < itemsinOrder.get(beleg)) res = false;
+        }
+        if(res) {
+            voegBestellijnToe(lastBestelling.getNaamBroodje());
+            for(int i = 0; i < belegLijst.length; i++) {
+                voegBelegenToe(belegLijst[i].trim());
+            }
+        }
+
+
+        return res;
+
+    }
 
     public void voegBestellijnToe(String naamBroodje) {
         bestelling.voegBestelLijnToe(naamBroodje);
@@ -48,6 +79,9 @@ public class BestelFacade implements Subject{
         belegDatabase.getBeleg(beleg).aanpassenVoorraad();
         notifyObservers();
     }
+    public void dupeOrder() {
+
+    }
 
     public List<Bestellijn> getLijstBestellijnen() {
         return bestelling.getBestellijnList();
@@ -60,6 +94,7 @@ public class BestelFacade implements Subject{
     public Map<String, Integer> getVoorraadLijstBelegen() {
         return BelegDatabase.getDatabase().getVoorraadLijstBelegen();
     }
+
 
 
     @Override

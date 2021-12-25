@@ -30,6 +30,7 @@ public class OrderView {
 	private Map<String, Button> broojebuttons;
 	private Map<String, Button> belegButtons;
 	private Button nieuwBestellingBtn;
+	private Button duplicateOrderBtn;
 	private TableView<Bestellijn> bestellijnTableView;
 	private Label aantalBroodjes;
 		
@@ -97,7 +98,7 @@ public class OrderView {
 
 		VBox rightBox = new VBox(8);
 		Label selecteer = new Label("Selecteer lijn in lijst");
-		Button voegzelf = new Button("Voeg zelfde broodje toe");
+		duplicateOrderBtn = new Button("Voeg zelfde broodje toe");
 		Button verwijder = new Button("Verwijder broodje");
 
 		VBox anbox = new VBox(8);
@@ -105,7 +106,7 @@ public class OrderView {
 
 		Button annuleer = new Button("Annuleer bestelling");
 		anbox.getChildren().add(annuleer);
-		rightBox.getChildren().addAll(selecteer, voegzelf, verwijder, anbox);
+		rightBox.getChildren().addAll(selecteer, duplicateOrderBtn, verwijder, anbox);
 
 		HBox midsec = new HBox(8);
 		midsec.setPadding(new Insets(10));
@@ -145,6 +146,9 @@ public class OrderView {
 	}
 	public Map<String, Button> getBelegbuttons() {
 		return this.belegButtons;
+	}
+	public Button getDuplicateOrderBtn() {
+		return this.duplicateOrderBtn;
 	}
 
 }
