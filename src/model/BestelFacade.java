@@ -1,5 +1,7 @@
 package model;
 
+import controller.AdminController;
+import controller.OrderViewController;
 import jxl.read.biff.BiffException;
 import model.database.BelegDatabase;
 import model.database.BroodjesDatabase;
@@ -17,6 +19,7 @@ public class BestelFacade implements Subject{
     private final List<Observer> observers;
     private BroodjesDatabase broodjesDatabase;
     private BelegDatabase belegDatabase;
+    private BestellingEvents event;
 
 
     public BestelFacade() throws BiffException, IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
@@ -25,6 +28,7 @@ public class BestelFacade implements Subject{
         broodjesDatabase = BroodjesDatabase.getInstance(broodjesfile, LoadSaveStrategyEnum.BROODJESEXCELLOADSAVESTRATEGY);
         belegDatabase = BelegDatabase.getInstance(belegfile, LoadSaveStrategyEnum.BELEGEXCELLOADSAVESTRATEGY);
         observers = new ArrayList<>();
+        event = BestellingEvents.LOAD_DATABASE;
         nieuwBestelling();
     }
 
@@ -35,6 +39,7 @@ public class BestelFacade implements Subject{
     public void voegBestellijnToe(String naamBroodje) {
         bestelling.voegBestelLijnToe(naamBroodje);
         broodjesDatabase.getBroodje(naamBroodje).aanpassenVoorraad();
+        event = BestellingEvents.TOEVOEGEN_BROODJE;
         notifyObservers();
     }
 
@@ -71,7 +76,20 @@ public class BestelFacade implements Subject{
     public void notifyObservers() {
         for (Observer o: observers
              ) {
-            o.update(broodjesDatabase, belegDatabase);
+            switch (event) {
+                case TOEVOEGEN_BROODJE:
+                    if(o instanceof AdminController || o instanceof OrderViewController){
+                        o.update(broodjesDatabase, belegDatabase);
+                    }
+                    break;
+                case LOAD_DATABASE:
+                    if (o instanceof AdminController) {
+                        o.update(broodjesDatabase, belegDatabase);
+                    }
+                    break;
+            }
+
+
         }
     }
 }

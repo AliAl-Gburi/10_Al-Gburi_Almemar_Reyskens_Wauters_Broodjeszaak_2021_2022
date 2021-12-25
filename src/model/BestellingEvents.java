@@ -1,7 +1,7 @@
 package model;
 
 public enum BestellingEvents {
-    TOEVOEGEN_BROODJE("Voeg broodje toe");
+    TOEVOEGEN_BROODJE("Voeg broodje toe"), LOAD_DATABASE("Load database");
 
     private final String stringValue;
 

@@ -31,6 +31,7 @@ public class OrderView {
 	private Map<String, Button> belegButtons;
 	private Button nieuwBestellingBtn;
 	private TableView<Bestellijn> bestellijnTableView;
+	private Label aantalBroodjes;
 		
 	public OrderView(OrderViewController controller){
 		stage.setTitle("ORDER VIEW");
@@ -80,15 +81,15 @@ public class OrderView {
 		kortings.getItems().addAll("Goedkoopste broodje gratis", "50% aan alle bestellingen");
 		topbox.getChildren().addAll(nieuwBestellingBtn, volgnr, kortings);
 
-		Label aantalbroodjes = new Label("Aantal broodjes: 0");
-		aantalbroodjes.setPadding(new Insets(0, 0, 0, 12));
+		aantalBroodjes = new Label("Aantal broodjes: 0");
+		aantalBroodjes.setPadding(new Insets(0, 0, 0, 12));
 
 		bestellijnTableView = new TableView<Bestellijn>();
 		bestellijnTableView.setMaxWidth(400);
 		bestellijnTableView.setMaxHeight(400);
 		TableColumn<Bestellijn, String> broodjes = new TableColumn<Bestellijn, String>("Broodjes");
 		broodjes.setCellValueFactory(new PropertyValueFactory<Bestellijn, String>("naamBroodje"));
-		broodjes.setMinWidth(200);
+		broodjes.setMinWidth(100);
 		TableColumn<Bestellijn, String> belegsoort = new TableColumn<Bestellijn, String>("Belegen");
 		belegsoort.setCellValueFactory(new PropertyValueFactory<Bestellijn, String>("belegsoorten"));
 		belegsoort.setMinWidth(300);
@@ -123,7 +124,7 @@ public class OrderView {
 
 
 		mainBox.setPadding(new Insets(10));
-		mainBox.getChildren().addAll(topbox, buttons,aantalbroodjes, midsec, botsec);
+		mainBox.getChildren().addAll(topbox, buttons,aantalBroodjes, midsec, botsec);
 
 		return mainBox;
 	}
@@ -133,6 +134,10 @@ public class OrderView {
 
 	public TableView<Bestellijn> getBestellijnTableView() {
 		return this.bestellijnTableView;
+	}
+
+	public Label getAantalBroodjes() {
+		return this.aantalBroodjes;
 	}
 
 	public Map<String, Button> getBroojebuttons() {

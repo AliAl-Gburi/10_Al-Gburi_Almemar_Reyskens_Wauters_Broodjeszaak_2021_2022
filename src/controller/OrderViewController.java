@@ -101,5 +101,7 @@ public class OrderViewController implements Observer {
             view.getBestellijnTableView().setItems(bestellijnObservableList);
             view.getBestellijnTableView().refresh();
 
+            view.getAantalBroodjes().setText("Aantal broodjes: " + bestellijnObservableList.size());
+
     }
 }
