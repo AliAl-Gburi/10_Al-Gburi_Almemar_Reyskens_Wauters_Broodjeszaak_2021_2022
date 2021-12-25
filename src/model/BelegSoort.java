@@ -54,6 +54,10 @@ public class BelegSoort implements Comparable<BelegSoort>{
         return b.getBelegnaam().equals(this.getBelegnaam());
     }
 
+    public void aanpassenVoorraad() {
+        this.voorraad = this.voorraad - 1;
+    }
+
     public String toString() {
         return getBelegnaam() + "," + getVerkoopprijs() + "," + getVoorraad() + "," + getVerkocht();
     }

@@ -2,6 +2,7 @@ package model.database;
 
 import jxl.read.biff.BiffException;
 import model.BelegSoort;
+import model.Broodje;
 import model.database.loadSaveStrategies.BelegTekstLoadSaveStrategy;
 import model.database.loadSaveStrategies.LoadSaveStrategy;
 import model.database.loadSaveStrategies.LoadSaveStrategyEnum;
@@ -13,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class BelegDatabase{
 
@@ -40,6 +42,18 @@ public class BelegDatabase{
 
     public static BelegDatabase getDatabase() {
         return database;
+    }
+
+    public BelegSoort getBeleg(String naamBeleg) {
+        return belegMap.get(naamBeleg);
+    }
+
+    public Map<String, Integer> getVoorraadLijstBelegen() {
+        Map<String, Integer> res = new TreeMap<>();
+        for (BelegSoort beleg: belegen) {
+            res.put(beleg.getBelegnaam(), beleg.getVoorraad());
+        }
+        return res;
     }
 
 

@@ -11,7 +11,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import jxl.read.biff.BiffException;
 import model.BelegSoort;
-import model.Broodjes;
+import model.Broodje;
 import model.database.BelegDatabase;
 import model.database.BroodjesDatabase;
 import model.database.loadSaveStrategies.LoadSaveStrategyEnum;
@@ -23,12 +23,9 @@ import java.lang.reflect.InvocationTargetException;
 
 public class SandwichOverviewPane extends GridPane{
 	//private TableView<Speler> table;
-	private TableView<Broodjes> broodjestable;
+	private TableView<Broodje> broodjestable;
 	private TableView<BelegSoort> belegtable;
-	private ObservableList<Broodjes> broodjes;
-	private BroodjesDatabase broodjesDatabase;
-	private BelegDatabase belegDatabase;
-	private ObservableList<BelegSoort> belegen;
+
 	
 	
 	public SandwichOverviewPane() throws IOException, BiffException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
@@ -37,27 +34,24 @@ public class SandwichOverviewPane extends GridPane{
         this.setHgap(5);        
 		this.add(new Label("Broodjes:"), 0, 0, 1, 1);
 		this.add(new Label("Belegen:"), 1, 0, 1, 1);
-		File broodjesfile = new File("src/bestanden/broodjes.xls");
-		File belegfile = new File("src/bestanden/beleg.xls");
-		broodjesDatabase = BroodjesDatabase.getInstance(broodjesfile, LoadSaveStrategyEnum.BROODJESEXCELLOADSAVESTRATEGY);
-		belegDatabase = BelegDatabase.getInstance(belegfile, LoadSaveStrategyEnum.BELEGEXCELLOADSAVESTRATEGY);
-		broodjestable = new TableView<Broodjes>();
+
+
+		broodjestable = new TableView<Broodje>();
 		belegtable = new TableView<BelegSoort>();
 		this.add(broodjestable, 0, 1);
 		this.add(belegtable, 1, 1);
-		refresh();
 
 		//broodje tableview maken
 
-		TableColumn<Broodjes, String> broodjeNaam = new TableColumn<Broodjes, String>("Broodje naam");
+		TableColumn<Broodje, String> broodjeNaam = new TableColumn<Broodje, String>("Broodje naam");
 		broodjeNaam.setMinWidth(100);
-		broodjeNaam.setCellValueFactory(new PropertyValueFactory<Broodjes, String>("broodjesnaam"));
-		TableColumn<Broodjes, Double> broodjePrijs = new TableColumn<Broodjes, Double>("Prijs");
+		broodjeNaam.setCellValueFactory(new PropertyValueFactory<Broodje, String>("broodjesnaam"));
+		TableColumn<Broodje, Double> broodjePrijs = new TableColumn<Broodje, Double>("Prijs");
 		broodjePrijs.setMinWidth(100);
-		broodjePrijs.setCellValueFactory(new PropertyValueFactory<Broodjes, Double>("verkoopprijs"));
-		TableColumn<Broodjes, Integer> broodjeVoorraad = new TableColumn<Broodjes, Integer>("Voorraad");
+		broodjePrijs.setCellValueFactory(new PropertyValueFactory<Broodje, Double>("verkoopprijs"));
+		TableColumn<Broodje, Integer> broodjeVoorraad = new TableColumn<Broodje, Integer>("Voorraad");
 		broodjeVoorraad.setMinWidth(100);
-		broodjeVoorraad.setCellValueFactory(new PropertyValueFactory<Broodjes, Integer>("voorraad"));
+		broodjeVoorraad.setCellValueFactory(new PropertyValueFactory<Broodje, Integer>("voorraad"));
 		broodjestable.getColumns().addAll(broodjeNaam, broodjePrijs, broodjeVoorraad);
 
 		//beleg tablevire maken
@@ -75,13 +69,13 @@ public class SandwichOverviewPane extends GridPane{
 
 	}
 
-	public void refresh() {
-		broodjes = FXCollections.observableArrayList(broodjesDatabase.getBroodjesList());
-		broodjestable.setItems(broodjes);
-		broodjestable.refresh();
-
-		belegen = FXCollections.observableArrayList(belegDatabase.getBelegen());
-		belegtable.setItems(belegen);
-		belegtable.refresh();
+	public TableView<Broodje> getBroodjestable() {
+		return this.broodjestable;
 	}
+
+	public TableView<BelegSoort> getBelegtable() {
+		return this.belegtable;
+	}
+
+
 }

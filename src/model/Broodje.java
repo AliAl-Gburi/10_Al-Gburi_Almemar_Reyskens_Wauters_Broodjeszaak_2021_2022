@@ -2,7 +2,7 @@
 
 package model;
 
-public class Broodjes implements Comparable<Broodjes> {
+public class Broodje implements Comparable<Broodje> {
     /**
      * @authors Ali Al-Gburi
      * **/
@@ -12,7 +12,7 @@ public class Broodjes implements Comparable<Broodjes> {
     private int voorraad;
     private int verkocht;
 
-    public Broodjes(String broodjesnaam, double verkoopprijs, int voorraad, int verkocht) {
+    public Broodje(String broodjesnaam, double verkoopprijs, int voorraad, int verkocht) {
         setBroodjesnaam(broodjesnaam);
         setVerkoopprijs(verkoopprijs);
         setVoorraad(voorraad);
@@ -54,8 +54,13 @@ public class Broodjes implements Comparable<Broodjes> {
         return this.verkocht;
     }
 
+    public void aanpassenVoorraad() {
+        this.voorraad = this.voorraad - 1;
+    }
+
+
     public boolean equals(Object o) {
-        Broodjes b = (Broodjes) o;
+        Broodje b = (Broodje) o;
         return this.getBroodjesnaam().equals(b.getBroodjesnaam());
     }
 
@@ -64,7 +69,7 @@ public class Broodjes implements Comparable<Broodjes> {
     }
 
     @Override
-    public int compareTo(Broodjes o) {
+    public int compareTo(Broodje o) {
         return this.getBroodjesnaam().compareTo(o.getBroodjesnaam());
     }
 }

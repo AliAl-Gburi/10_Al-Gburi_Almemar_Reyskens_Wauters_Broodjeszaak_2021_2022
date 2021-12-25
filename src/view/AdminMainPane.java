@@ -11,10 +11,12 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 public class AdminMainPane extends BorderPane {
+    private SandwichOverviewPane sandwichOverviewPane;
+
 	public AdminMainPane() throws IOException, BiffException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 	    TabPane tabPane = new TabPane(); 	    
         //Tab spelVerloopTab = new Tab("Spelverloop");
-        SandwichOverviewPane sandwichOverviewPane = new SandwichOverviewPane();
+        sandwichOverviewPane = new SandwichOverviewPane();
         Tab broodjesTab = new Tab("Broodjes/Beleg",sandwichOverviewPane);
         Tab instellingTab = new Tab("Instellingen");
         Tab statistiekTab = new Tab("Statistieken");
@@ -24,4 +26,8 @@ public class AdminMainPane extends BorderPane {
         tabPane.getTabs().add(instellingTab);
         this.setCenter(tabPane);
 	}
+
+    public SandwichOverviewPane getSandwichOverviewPane() {
+        return this.sandwichOverviewPane;
+    }
 }
