@@ -33,7 +33,8 @@ public class OrderViewController implements Observer {
         broodjeListener();
         belegListener();
         voegZelfdeBestelling();
-
+        verwijderBroodje();
+        annuleerBestelling();
     }
 
     public void nieuweBestelling() {
@@ -46,6 +47,15 @@ public class OrderViewController implements Observer {
 
             }
         });
+    }
+
+    public void deactivateAllBroodjesEnBelegen() {
+        for (String broodje: view.getBroojebuttons().keySet()) {
+            view.getBroojebuttons().get(broodje).setDisable(true);
+        }
+        for (String beleg: view.getBelegbuttons().keySet()) {
+            view.getBelegbuttons().get(beleg).setDisable(true);
+        }
     }
 
     public void voorraadChecker() {
@@ -90,11 +100,41 @@ public class OrderViewController implements Observer {
                 if(facade.getLijstBestellijnen().size() < 1) {
                     a.setContentText("Er moet minimaal 1 broodje zijn voordat je het kunt dupliceren");
                     a.show();
-                } else if(!facade.enoughtoDupe()) {
+                } else if(!dupeBestelling()) {
                     a.setContentText("U bent niet op voorraad");
                     a.show();
+                }
+            }
+        });
+    }
+
+    public void verwijderBroodje() {
+        Alert a = new Alert(Alert.AlertType.ERROR);
+        view.getVerwijderBroodje().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(facade.getLijstBestellijnen().size() < 1) {
+                    a.setContentText("Er zijn geen broodjes in de bestelling");
+                    a.show();
                 } else {
-                    facade.dupeOrder();
+                    facade.verwijderLaatsteToegevoegdBroodje();
+                }
+            }
+        });
+    }
+
+    public void annuleerBestelling() {
+        Alert a = new Alert(Alert.AlertType.ERROR);
+        view.getAnnuleerBestelling().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(!view.getNieuwBestellingBtn().isDisabled()) {
+                    a.setContentText("Je moet een bestelling hebben voordat je deze kunt annuleren");
+                    a.show();
+                } else {
+                    facade.annuleerBestelling();
+                    view.getNieuwBestellingBtn().setDisable(false);
+                    deactivateAllBroodjesEnBelegen();
                 }
             }
         });
@@ -102,6 +142,10 @@ public class OrderViewController implements Observer {
 
     public void voegBestelLijnToe(String naamBroodje) {
         facade.voegBestellijnToe(naamBroodje);
+    }
+
+    public boolean dupeBestelling() {
+        return facade.enoughtoDupe();
     }
 
     public void voegBelegToe(String naamBeleg) {

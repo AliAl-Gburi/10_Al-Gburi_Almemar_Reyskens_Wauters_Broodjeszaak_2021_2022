@@ -33,6 +33,8 @@ public class OrderView {
 	private Button duplicateOrderBtn;
 	private TableView<Bestellijn> bestellijnTableView;
 	private Label aantalBroodjes;
+	private Button verwijderBroodje;
+	private Button annuleerBestelling;
 		
 	public OrderView(OrderViewController controller){
 		stage.setTitle("ORDER VIEW");
@@ -99,14 +101,14 @@ public class OrderView {
 		VBox rightBox = new VBox(8);
 		Label selecteer = new Label("Selecteer lijn in lijst");
 		duplicateOrderBtn = new Button("Voeg zelfde broodje toe");
-		Button verwijder = new Button("Verwijder broodje");
+		verwijderBroodje = new Button("Verwijder broodje");
 
 		VBox anbox = new VBox(8);
 		anbox.setPadding(new Insets(184, 0, 0, 0));
 
-		Button annuleer = new Button("Annuleer bestelling");
-		anbox.getChildren().add(annuleer);
-		rightBox.getChildren().addAll(selecteer, duplicateOrderBtn, verwijder, anbox);
+		annuleerBestelling = new Button("Annuleer bestelling");
+		anbox.getChildren().add(annuleerBestelling);
+		rightBox.getChildren().addAll(selecteer, duplicateOrderBtn, verwijderBroodje, anbox);
 
 		HBox midsec = new HBox(8);
 		midsec.setPadding(new Insets(10));
@@ -149,6 +151,12 @@ public class OrderView {
 	}
 	public Button getDuplicateOrderBtn() {
 		return this.duplicateOrderBtn;
+	}
+	public Button getVerwijderBroodje() {
+		return this.verwijderBroodje;
+	}
+	public Button getAnnuleerBestelling() {
+		return this.annuleerBestelling;
 	}
 
 }

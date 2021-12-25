@@ -67,6 +67,35 @@ public class BestelFacade implements Subject{
 
     }
 
+    public void verwijderLaatsteToegevoegdBroodje() {
+        Bestellijn lastBestelling = bestelling.getLastToegevoegdBestelling();
+        broodjesDatabase.getBroodje(lastBestelling.getNaamBroodje()).setVoorraad(broodjesDatabase.getBroodje(lastBestelling.getNaamBroodje()).getVoorraad() + 1);
+
+        String[] belegLijst = lastBestelling.getBelegsoorten().split(",");
+        Map<String, Integer> itemsinOrder = new TreeMap<>();
+        for(int i = 0; i < belegLijst.length; i++) {
+            if(!itemsinOrder.containsKey(belegLijst[i].trim())){
+                itemsinOrder.put(belegLijst[i].trim(), 1);
+            } else {
+                int xd = itemsinOrder.get(belegLijst[i].trim());
+                xd++;
+                itemsinOrder.put(belegLijst[i].trim() ,xd);
+            }
+        }
+        for(String beleg: itemsinOrder.keySet()) {
+            belegDatabase.getBeleg(beleg).setVoorraad(itemsinOrder.get(beleg) + belegDatabase.getBeleg(beleg).getVoorraad());
+        }
+        bestelling.getBestellijnList().remove(bestelling.getBestellijnList().size() - 1);
+        notifyObservers();
+
+    }
+
+    public void annuleerBestelling() {
+        while (bestelling.getBestellijnList().size() > 0) {
+            verwijderLaatsteToegevoegdBroodje();
+        }
+    }
+
     public void voegBestellijnToe(String naamBroodje) {
         bestelling.voegBestelLijnToe(naamBroodje);
         broodjesDatabase.getBroodje(naamBroodje).aanpassenVoorraad();
@@ -79,9 +108,7 @@ public class BestelFacade implements Subject{
         belegDatabase.getBeleg(beleg).aanpassenVoorraad();
         notifyObservers();
     }
-    public void dupeOrder() {
 
-    }
 
     public List<Bestellijn> getLijstBestellijnen() {
         return bestelling.getBestellijnList();
