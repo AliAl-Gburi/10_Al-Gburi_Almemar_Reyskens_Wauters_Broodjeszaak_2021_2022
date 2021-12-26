@@ -176,7 +176,7 @@ public class BestelFacade implements Subject {
         double prijsBeleg = 0;
         if (bestellijn.getBelegsoorten() != null && !bestellijn.getBelegsoorten().isEmpty()) {
             for (String belegsoort : bestellijn.getBelegSoortenList()) {
-                prijsBeleg += belegDatabase.getBeleg(belegsoort).getVerkoopprijs();
+                prijsBeleg += belegDatabase.getBeleg(belegsoort.trim()).getVerkoopprijs();
             }
         }
         prijs += prijsBroodje + prijsBeleg;

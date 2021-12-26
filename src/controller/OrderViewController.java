@@ -33,6 +33,7 @@ public class OrderViewController implements Observer {
         voegZelfdeBestelling();
         verwijderBroodje();
         annuleerBestelling();
+        afsluitBestelling();
 
     }
 
@@ -193,6 +194,15 @@ public class OrderViewController implements Observer {
         }
     }
 
+    private void afsluitBestelling() {
+        view.getAfsluitBestelling().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                view.getTeBetalen().setText("Te betalen: €" + getPrijsBestelling());
+            }
+        });
+    }
+
     @Override
     public void update(BroodjesDatabase broodjeDatabase, BelegDatabase belegDatabase) {
         bestellijnObservableList = FXCollections.observableList(facade.getLijstBestellijnen());
@@ -200,7 +210,6 @@ public class OrderViewController implements Observer {
         view.getBestellijnTableView().refresh();
 
         view.getAantalBroodjes().setText("Aantal broodjes: " + bestellijnObservableList.size());
-        view.getTeBetalen().setText("Te betalen: €" + facade.getPrijsBestelling());
 
     }
 }
