@@ -37,7 +37,8 @@ public class OrderView {
 	private Button annuleerBestelling;
 	private HBox broodjesKnopen;
 	private HBox belegenKnopen;
-		
+	private Label tebetalen;
+
 	public OrderView(OrderViewController controller){
 		stage.setTitle("ORDER VIEW");
 		stage.initStyle(StageStyle.UTILITY);
@@ -107,7 +108,7 @@ public class OrderView {
 		HBox botsec = new HBox(8);
 		botsec.setPadding(new Insets(10));
 		Button afsluit = new Button("Afsluiten Bestelling");
-		Label tebetalen = new Label("Te betalen: 0$");
+		Label tebetalen = new Label("Te betalen: €0");
 		tebetalen.setPadding(new Insets(5));
 		Button betaal = new Button("Betaal");
 		betaal.setDisable(true);
@@ -131,6 +132,10 @@ public class OrderView {
 
 	public Label getAantalBroodjes() {
 		return this.aantalBroodjes;
+	}
+	
+	public Label getTeBetalen() {
+		return this.tebetalen;
 	}
 
 	public Map<String, Button> getBroojebuttons() {

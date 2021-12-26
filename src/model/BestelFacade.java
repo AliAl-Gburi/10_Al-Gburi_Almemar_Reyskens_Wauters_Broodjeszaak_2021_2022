@@ -11,7 +11,7 @@ import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
-public class BestelFacade implements Subject{
+public class BestelFacade implements Subject {
     private Bestelling bestelling;
     private final List<Observer> observers;
     private BroodjesDatabase broodjesDatabase;
@@ -34,12 +34,12 @@ public class BestelFacade implements Subject{
             properties.load(is);
             Object format = properties.getProperty("databaseFormat");
             String dbFormat = (String) format;
-            if(dbFormat.equals("text")) {
+            if (dbFormat.equals("text")) {
                 File broodjesfile = new File("src/bestanden/broodjes.txt");
                 File belegfile = new File("src/bestanden/beleg.txt");
                 broodjesDatabase = BroodjesDatabase.getInstance(broodjesfile, LoadSaveStrategyEnum.BROODJESTEKSTLOADSAVESTRATEGY);
                 belegDatabase = BelegDatabase.getInstance(belegfile, LoadSaveStrategyEnum.BELEGTEKSTLOADSAVESTRATEGY);
-            } else if(dbFormat.equals("excel")) {
+            } else if (dbFormat.equals("excel")) {
                 File broodjesfile = new File("src/bestanden/broodjes.xls");
                 File belegfile = new File("src/bestanden/beleg.xls");
                 broodjesDatabase = BroodjesDatabase.getInstance(broodjesfile, LoadSaveStrategyEnum.BROODJESEXCELLOADSAVESTRATEGY);
@@ -67,28 +67,29 @@ public class BestelFacade implements Subject{
     public void nieuwBestelling() {
         bestelling = new Bestelling();
     }
+
     public boolean enoughtoDupe() {
         boolean res = true;
         Bestellijn lastBestelling = bestelling.getLastToegevoegdBestelling();
-        if(broodjesDatabase.getVoorraadLijstBroodjes().get(lastBestelling.getNaamBroodje()) < 1) res = false;
+        if (broodjesDatabase.getVoorraadLijstBroodjes().get(lastBestelling.getNaamBroodje()) < 1) res = false;
         String[] belegLijst = lastBestelling.getBelegsoorten().split(",");
         Map<String, Integer> itemsinOrder = new TreeMap<>();
-        for(int i = 0; i < belegLijst.length; i++) {
-            if(!itemsinOrder.containsKey(belegLijst[i].trim())){
+        for (int i = 0; i < belegLijst.length; i++) {
+            if (!itemsinOrder.containsKey(belegLijst[i].trim())) {
                 itemsinOrder.put(belegLijst[i].trim(), 1);
             } else {
                 int xd = itemsinOrder.get(belegLijst[i].trim());
                 xd++;
-                itemsinOrder.put(belegLijst[i].trim() ,xd);
+                itemsinOrder.put(belegLijst[i].trim(), xd);
             }
         }
 
-        for (String beleg: itemsinOrder.keySet()) {
-            if(belegDatabase.getVoorraadLijstBelegen().get(beleg) < itemsinOrder.get(beleg)) res = false;
+        for (String beleg : itemsinOrder.keySet()) {
+            if (belegDatabase.getVoorraadLijstBelegen().get(beleg) < itemsinOrder.get(beleg)) res = false;
         }
-        if(res) {
+        if (res) {
             voegBestellijnToe(lastBestelling.getNaamBroodje());
-            for(int i = 0; i < belegLijst.length; i++) {
+            for (int i = 0; i < belegLijst.length; i++) {
                 voegBelegenToe(belegLijst[i].trim());
             }
         }
@@ -104,16 +105,16 @@ public class BestelFacade implements Subject{
 
         String[] belegLijst = lastBestelling.getBelegsoorten().split(",");
         Map<String, Integer> itemsinOrder = new TreeMap<>();
-        for(int i = 0; i < belegLijst.length; i++) {
-            if(!itemsinOrder.containsKey(belegLijst[i].trim())){
+        for (int i = 0; i < belegLijst.length; i++) {
+            if (!itemsinOrder.containsKey(belegLijst[i].trim())) {
                 itemsinOrder.put(belegLijst[i].trim(), 1);
             } else {
                 int xd = itemsinOrder.get(belegLijst[i].trim());
                 xd++;
-                itemsinOrder.put(belegLijst[i].trim() ,xd);
+                itemsinOrder.put(belegLijst[i].trim(), xd);
             }
         }
-        for(String beleg: itemsinOrder.keySet()) {
+        for (String beleg : itemsinOrder.keySet()) {
             belegDatabase.getBeleg(beleg).setVoorraad(itemsinOrder.get(beleg) + belegDatabase.getBeleg(beleg).getVoorraad());
         }
         bestelling.getBestellijnList().remove(bestelling.getBestellijnList().size() - 1);
@@ -152,9 +153,11 @@ public class BestelFacade implements Subject{
     public Map<String, Integer> getVoorraadLijstBelegen() {
         return BelegDatabase.getDatabase().getVoorraadLijstBelegen();
     }
+
     public List<Broodje> getBroodjesList() {
         return broodjesDatabase.getBroodjesList();
     }
+
     public List<BelegSoort> getBelegenList() {
         return belegDatabase.getBelegen();
     }
@@ -162,11 +165,31 @@ public class BestelFacade implements Subject{
     public Map<String, Integer> getVerkochtLijstBroodjes() {
         return BroodjesDatabase.getBroodjesDatabase().getVerkochtLijstBroodjes();
     }
+
     public Map<String, Integer> getVerkochtLijstBelegen() {
         return BelegDatabase.getDatabase().getVerkochtLijstBelegen();
     }
 
+    public void berekenPrijsBestellijn(Bestellijn bestellijn) {
+        double prijs = 0;
+        double prijsBroodje = broodjesDatabase.getBroodje(bestellijn.getNaamBroodje()).getVerkoopprijs();
+        double prijsBeleg = 0;
+        if (bestellijn.getBelegsoorten() != null && !bestellijn.getBelegsoorten().isEmpty()) {
+            for (String belegsoort : bestellijn.getBelegSoortenList()) {
+                prijsBeleg += belegDatabase.getBeleg(belegsoort).getVerkoopprijs();
+            }
+        }
+        prijs += prijsBroodje + prijsBeleg;
 
+        bestellijn.setPrijs(prijs);
+    }
+
+    public double getPrijsBestelling() {
+        for (Bestellijn bestellijn : bestelling.getBestellijnList()) {
+            berekenPrijsBestellijn(bestellijn);
+        }
+        return bestelling.berekenPrijs();
+    }
 
     @Override
     public void registerObserver(Observer o) {
@@ -180,11 +203,11 @@ public class BestelFacade implements Subject{
 
     @Override
     public void notifyObservers() {
-        for (Observer o: observers
-             ) {
+        for (Observer o : observers
+        ) {
             switch (event) {
                 case TOEVOEGEN_BROODJE:
-                    if(o instanceof AdminController || o instanceof OrderViewController){
+                    if (o instanceof AdminController || o instanceof OrderViewController) {
                         o.update(broodjesDatabase, belegDatabase);
                     }
                     break;

@@ -1,4 +1,4 @@
 package model.kortingStrategies;
 
-public class KortingCheapestSandwich {
+public class KortingCheapestSandwich implements KortingStrategy {
 }

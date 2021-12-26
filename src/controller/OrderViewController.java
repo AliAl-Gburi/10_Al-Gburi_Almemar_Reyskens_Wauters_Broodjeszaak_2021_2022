@@ -49,26 +49,26 @@ public class OrderViewController implements Observer {
     }
 
     public void deactivateAllBroodjesEnBelegen() {
-        for (String broodje: view.getBroojebuttons().keySet()) {
+        for (String broodje : view.getBroojebuttons().keySet()) {
             view.getBroojebuttons().get(broodje).setDisable(true);
         }
-        for (String beleg: view.getBelegbuttons().keySet()) {
+        for (String beleg : view.getBelegbuttons().keySet()) {
             view.getBelegbuttons().get(beleg).setDisable(true);
         }
     }
 
     public void voorraadChecker() {
-        for (String broodje: view.getBroojebuttons().keySet()) {
+        for (String broodje : view.getBroojebuttons().keySet()) {
             view.getBroojebuttons().get(broodje).setDisable(!availableBroodjeVoorraad(broodje));
         }
 
-        for (String beleg: view.getBelegbuttons().keySet()) {
+        for (String beleg : view.getBelegbuttons().keySet()) {
             view.getBelegbuttons().get(beleg).setDisable(!availableBelegVoorraad(beleg));
         }
     }
 
     public void broodjeListener() {
-        for (String broodje: view.getBroojebuttons().keySet()) {
+        for (String broodje : view.getBroojebuttons().keySet()) {
             view.getBroojebuttons().get(broodje).setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
@@ -80,7 +80,7 @@ public class OrderViewController implements Observer {
     }
 
     public void belegListener() {
-        for(String beleg: view.getBelegbuttons().keySet()) {
+        for (String beleg : view.getBelegbuttons().keySet()) {
             view.getBelegbuttons().get(beleg).setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
@@ -96,10 +96,10 @@ public class OrderViewController implements Observer {
         view.getDuplicateOrderBtn().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(facade.getLijstBestellijnen().size() < 1) {
+                if (facade.getLijstBestellijnen().size() < 1) {
                     a.setContentText("Er moet minimaal 1 broodje zijn voordat je het kunt dupliceren");
                     a.show();
-                } else if(!dupeBestelling()) {
+                } else if (!dupeBestelling()) {
                     a.setContentText("U bent niet op voorraad");
                     a.show();
                 }
@@ -112,7 +112,7 @@ public class OrderViewController implements Observer {
         view.getVerwijderBroodje().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(facade.getLijstBestellijnen().size() < 1) {
+                if (facade.getLijstBestellijnen().size() < 1) {
                     a.setContentText("Er zijn geen broodjes in de bestelling");
                     a.show();
                 } else {
@@ -127,7 +127,7 @@ public class OrderViewController implements Observer {
         view.getAnnuleerBestelling().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(!view.getNieuwBestellingBtn().isDisabled()) {
+                if (!view.getNieuwBestellingBtn().isDisabled()) {
                     a.setContentText("Je moet een bestelling hebben voordat je deze kunt annuleren");
                     a.show();
                 } else {
@@ -158,9 +158,18 @@ public class OrderViewController implements Observer {
 
     }
 
+    public void berekenPrijsBestellijn(Bestellijn bestellijn) {
+        facade.berekenPrijsBestellijn(bestellijn);
+    }
+
+    public double getPrijsBestelling() {
+        return facade.getPrijsBestelling();
+    }
+
     private boolean availableBroodjeVoorraad(String item) {
         return facade.getVoorraadLijstBroodjes().get(item) > 0;
     }
+
     private boolean availableBelegVoorraad(String item) {
         return facade.getVoorraadLijstBelegen().get(item) > 0;
     }
@@ -176,7 +185,7 @@ public class OrderViewController implements Observer {
             view.getBroodjesKnopen().getChildren().add(broodjebtn);
         }
 
-        for (BelegSoort beleg: facade.getBelegenList()) {
+        for (BelegSoort beleg : facade.getBelegenList()) {
             Button belegbtn = new Button(beleg.getBelegnaam());
             view.getBelegbuttons().put(beleg.getBelegnaam(), belegbtn);
             belegbtn.setDisable(true);
@@ -186,11 +195,12 @@ public class OrderViewController implements Observer {
 
     @Override
     public void update(BroodjesDatabase broodjeDatabase, BelegDatabase belegDatabase) {
-            bestellijnObservableList = FXCollections.observableList(facade.getLijstBestellijnen());
-            view.getBestellijnTableView().setItems(bestellijnObservableList);
-            view.getBestellijnTableView().refresh();
+        bestellijnObservableList = FXCollections.observableList(facade.getLijstBestellijnen());
+        view.getBestellijnTableView().setItems(bestellijnObservableList);
+        view.getBestellijnTableView().refresh();
 
-            view.getAantalBroodjes().setText("Aantal broodjes: " + bestellijnObservableList.size());
+        view.getAantalBroodjes().setText("Aantal broodjes: " + bestellijnObservableList.size());
+        view.getTeBetalen().setText("Te betalen: €" + facade.getPrijsBestelling());
 
     }
 }
