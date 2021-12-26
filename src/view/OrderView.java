@@ -35,6 +35,8 @@ public class OrderView {
 	private Label aantalBroodjes;
 	private Button verwijderBroodje;
 	private Button annuleerBestelling;
+	private HBox broodjesKnopen;
+	private HBox belegenKnopen;
 		
 	public OrderView(OrderViewController controller){
 		stage.setTitle("ORDER VIEW");
@@ -53,26 +55,14 @@ public class OrderView {
 		broojebuttons = new TreeMap<>();
 		belegButtons = new TreeMap<>();
 
-		HBox broodjesknopen = new HBox(8);
-		for (Broodje broodje : broodjesDatabase.getBroodjesList()
-			 ) {
-			Button broodjebtn = new Button(broodje.getBroodjesnaam());
-			broojebuttons.put(broodje.getBroodjesnaam(), broodjebtn);
-			broodjebtn.setDisable(true);
-			broodjesknopen.getChildren().add(broodjebtn);
-		}
+		broodjesKnopen = new HBox(8);
 
-		HBox belegKnopen = new HBox(8);
-		for (BelegSoort beleg: belegDatabase.getBelegen()) {
-			Button belegbtn = new Button(beleg.getBelegnaam());
-			belegButtons.put(beleg.getBelegnaam(), belegbtn);
-			belegbtn.setDisable(true);
-			belegKnopen.getChildren().add(belegbtn);
-		}
+		belegenKnopen = new HBox(8);
+
 
 		VBox buttons = new VBox(8);
 		buttons.setPadding(new Insets(10));
-		buttons.getChildren().addAll(broodjesknopen, belegKnopen);
+		buttons.getChildren().addAll(broodjesKnopen, belegenKnopen);
 
 		HBox topbox = new HBox(8);;
 		topbox.setPadding(new Insets(10));
@@ -157,6 +147,12 @@ public class OrderView {
 	}
 	public Button getAnnuleerBestelling() {
 		return this.annuleerBestelling;
+	}
+	public HBox getBroodjesKnopen() {
+		return this.broodjesKnopen;
+	}
+	public HBox getBelegenKnopen() {
+		return this.belegenKnopen;
 	}
 
 }

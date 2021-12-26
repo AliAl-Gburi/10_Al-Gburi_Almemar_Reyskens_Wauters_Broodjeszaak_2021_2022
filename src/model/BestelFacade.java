@@ -121,6 +121,12 @@ public class BestelFacade implements Subject{
     public Map<String, Integer> getVoorraadLijstBelegen() {
         return BelegDatabase.getDatabase().getVoorraadLijstBelegen();
     }
+    public List<Broodje> getBroodjesList() {
+        return broodjesDatabase.getBroodjesList();
+    }
+    public List<BelegSoort> getBelegenList() {
+        return belegDatabase.getBelegen();
+    }
 
 
 

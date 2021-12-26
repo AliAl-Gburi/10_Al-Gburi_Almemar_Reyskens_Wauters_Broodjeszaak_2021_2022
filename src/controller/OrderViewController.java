@@ -6,10 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import model.BestelFacade;
-import model.Bestellijn;
-import model.Bestelling;
-import model.Observer;
+import model.*;
 import model.database.BelegDatabase;
 import model.database.BroodjesDatabase;
 import view.OrderView;
@@ -30,11 +27,13 @@ public class OrderViewController implements Observer {
 
     public void initialize() {
         nieuweBestelling();
+        loadBroodjeEnBelegKnopen();
         broodjeListener();
         belegListener();
         voegZelfdeBestelling();
         verwijderBroodje();
         annuleerBestelling();
+
     }
 
     public void nieuweBestelling() {
@@ -164,6 +163,25 @@ public class OrderViewController implements Observer {
     }
     private boolean availableBelegVoorraad(String item) {
         return facade.getVoorraadLijstBelegen().get(item) > 0;
+    }
+
+    private void loadBroodjeEnBelegKnopen() {
+
+
+        for (Broodje broodje : facade.getBroodjesList()
+        ) {
+            Button broodjebtn = new Button(broodje.getBroodjesnaam());
+            view.getBroojebuttons().put(broodje.getBroodjesnaam(), broodjebtn);
+            broodjebtn.setDisable(true);
+            view.getBroodjesKnopen().getChildren().add(broodjebtn);
+        }
+
+        for (BelegSoort beleg: facade.getBelegenList()) {
+            Button belegbtn = new Button(beleg.getBelegnaam());
+            view.getBelegbuttons().put(beleg.getBelegnaam(), belegbtn);
+            belegbtn.setDisable(true);
+            view.getBelegenKnopen().getChildren().add(belegbtn);
+        }
     }
 
     @Override
