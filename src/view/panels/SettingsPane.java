@@ -4,6 +4,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -12,7 +13,7 @@ import javafx.scene.layout.VBox;
 
 public class SettingsPane extends GridPane {
     private ChoiceBox<String> kortings;
-    private ChoiceBox<String> fileFormat;
+    private ComboBox<String> fileFormat;
     private Button saveBtn;
     private Label saveLabel;
 
@@ -32,7 +33,7 @@ public class SettingsPane extends GridPane {
         kortingsBox.getChildren().addAll(kortingslabel, kortings);
 
         Label fileFormatLabel = new Label("File format: ");
-        fileFormat = new ChoiceBox<>();
+        fileFormat = new ComboBox<>();
         fileFormat.setPadding(new Insets(0, 0, 0, 10));
         fileFormat.getItems().addAll("text", "excel");
         fileFormatBox.getChildren().addAll(fileFormatLabel, fileFormat);
@@ -56,7 +57,7 @@ public class SettingsPane extends GridPane {
         return this.kortings;
     }
 
-    public ChoiceBox<String> getFileFormat() {
+    public ComboBox<String> getFileFormat() {
         return this.fileFormat;
     }
 

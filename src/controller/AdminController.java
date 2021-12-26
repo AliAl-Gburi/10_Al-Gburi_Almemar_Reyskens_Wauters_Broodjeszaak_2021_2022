@@ -32,7 +32,23 @@ public class AdminController implements Observer {
 
     public void initialize() {
         facade.notifyObservers();
+        loadSelectedSettings();
         saveSetting();
+    }
+
+    private void loadSelectedSettings() {
+        Properties properties = new Properties();
+        try {
+            InputStream is = new FileInputStream("src/bestanden/settings.properties");
+            properties.load(is);
+            Object format = properties.getProperty("databaseFormat");
+            String dbFormat = (String) format;
+            view.getAdminMainPane().getSettingsPane().getFileFormat().setPromptText(dbFormat);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void saveSetting() {
@@ -41,10 +57,13 @@ public class AdminController implements Observer {
             public void handle(ActionEvent event) {
                 Properties properties = new Properties();
                 try {
-                    FileOutputStream os = new FileOutputStream("src/bestanden/settings.properties");
-                    properties.setProperty("databaseFormat", view.getAdminMainPane().getSettingsPane().getFileFormat().getValue());
-                    properties.store(os, "done");
-                    os.close();
+                    String value = view.getAdminMainPane().getSettingsPane().getFileFormat().getValue();
+                    if (value != null) {
+                        FileOutputStream os = new FileOutputStream("src/bestanden/settings.properties");
+                        properties.setProperty("databaseFormat", value);
+                        properties.store(os, "done");
+                        os.close();
+                    }
                     view.getAdminMainPane().getSettingsPane().getSaveLabel().setText("Your setting have been saved");
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
