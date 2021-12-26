@@ -7,13 +7,9 @@ import model.database.BelegDatabase;
 import model.database.BroodjesDatabase;
 import model.database.loadSaveStrategies.LoadSaveStrategyEnum;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class BestelFacade implements Subject{
     private Bestelling bestelling;
@@ -24,13 +20,48 @@ public class BestelFacade implements Subject{
 
 
     public BestelFacade() throws BiffException, IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        File broodjesfile = new File("src/bestanden/broodjes.xls");
-        File belegfile = new File("src/bestanden/beleg.xls");
-        broodjesDatabase = BroodjesDatabase.getInstance(broodjesfile, LoadSaveStrategyEnum.BROODJESEXCELLOADSAVESTRATEGY);
-        belegDatabase = BelegDatabase.getInstance(belegfile, LoadSaveStrategyEnum.BELEGEXCELLOADSAVESTRATEGY);
+
+        loadDatabase();
         observers = new ArrayList<>();
         event = BestellingEvents.LOAD_DATABASE;
         nieuwBestelling();
+    }
+
+    public void loadDatabase() {
+        Properties properties = new Properties();
+        try {
+            InputStream is = new FileInputStream("src/bestanden/settings.properties");
+            properties.load(is);
+            Object format = properties.getProperty("databaseFormat");
+            String dbFormat = (String) format;
+            if(dbFormat.equals("text")) {
+                File broodjesfile = new File("src/bestanden/broodjes.txt");
+                File belegfile = new File("src/bestanden/beleg.txt");
+                broodjesDatabase = BroodjesDatabase.getInstance(broodjesfile, LoadSaveStrategyEnum.BROODJESTEKSTLOADSAVESTRATEGY);
+                belegDatabase = BelegDatabase.getInstance(belegfile, LoadSaveStrategyEnum.BELEGTEKSTLOADSAVESTRATEGY);
+            } else if(dbFormat.equals("excel")) {
+                File broodjesfile = new File("src/bestanden/broodjes.xls");
+                File belegfile = new File("src/bestanden/beleg.xls");
+                broodjesDatabase = BroodjesDatabase.getInstance(broodjesfile, LoadSaveStrategyEnum.BROODJESEXCELLOADSAVESTRATEGY);
+                belegDatabase = BelegDatabase.getInstance(belegfile, LoadSaveStrategyEnum.BELEGEXCELLOADSAVESTRATEGY);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (BiffException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     public void nieuwBestelling() {

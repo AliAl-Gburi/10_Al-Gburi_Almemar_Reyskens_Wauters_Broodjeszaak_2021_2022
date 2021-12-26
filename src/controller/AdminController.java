@@ -2,6 +2,8 @@ package controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import model.BelegSoort;
 import model.BestelFacade;
 import model.Broodje;
@@ -9,6 +11,9 @@ import model.Observer;
 import model.database.BelegDatabase;
 import model.database.BroodjesDatabase;
 import view.AdminView;
+
+import java.io.*;
+import java.util.Properties;
 
 public class AdminController implements Observer {
     private AdminView view;
@@ -27,6 +32,27 @@ public class AdminController implements Observer {
 
     public void initialize() {
         facade.notifyObservers();
+        saveSetting();
+    }
+
+    public void saveSetting() {
+        view.getAdminMainPane().getSettingsPane().getSaveBtn().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Properties properties = new Properties();
+                try {
+                    FileOutputStream os = new FileOutputStream("src/bestanden/settings.properties");
+                    properties.setProperty("databaseFormat", view.getAdminMainPane().getSettingsPane().getFileFormat().getValue());
+                    properties.store(os, "done");
+                    os.close();
+                    view.getAdminMainPane().getSettingsPane().getSaveLabel().setText("Your setting have been saved");
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override

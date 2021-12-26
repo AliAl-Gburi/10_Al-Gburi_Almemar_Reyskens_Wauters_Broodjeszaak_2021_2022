@@ -3,7 +3,7 @@ package model.database.loadSaveStrategies;
 import model.BelegSoort;
 import utilities.TekstLoadSaveTemplate;
 
-public class BelegTekstLoadSaveStrategy extends TekstLoadSaveTemplate {
+public class BelegTekstLoadSaveStrategy extends TekstLoadSaveTemplate implements LoadSaveStrategy {
 
 
     @Override
