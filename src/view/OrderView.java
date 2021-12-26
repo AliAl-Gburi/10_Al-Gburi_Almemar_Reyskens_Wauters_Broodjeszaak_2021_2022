@@ -39,6 +39,8 @@ public class OrderView {
 	private HBox belegenKnopen;
 	private Label tebetalen;
 	private Button afsluitBestelling;
+	private Button betaal;
+	private Button naarKeuken;
 
 	public OrderView(OrderViewController controller){
 		stage.setTitle("ORDER VIEW");
@@ -111,9 +113,9 @@ public class OrderView {
 		afsluitBestelling = new Button("Afsluiten Bestelling");
 		tebetalen = new Label("Te betalen: €0");
 		tebetalen.setPadding(new Insets(5));
-		Button betaal = new Button("Betaal");
+		betaal = new Button("Betaal");
 		betaal.setDisable(true);
-		Button naarKeuken = new Button("Naar Keuken");
+		naarKeuken = new Button("Naar Keuken");
 		naarKeuken.setDisable(true);
 		botsec.getChildren().addAll(afsluitBestelling, tebetalen, betaal, naarKeuken);
 
@@ -162,6 +164,12 @@ public class OrderView {
 	}
 	public Button getAfsluitBestelling() {
 		return this.afsluitBestelling;
+	}
+	public Button getBetaal() {
+		return this.betaal;
+	}
+	public Button getNaarKeuken() {
+		return this.naarKeuken;
 	}
 
 }

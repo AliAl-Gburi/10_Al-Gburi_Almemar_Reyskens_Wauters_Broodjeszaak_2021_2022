@@ -135,6 +135,7 @@ public class OrderViewController implements Observer {
                     facade.annuleerBestelling();
                     view.getNieuwBestellingBtn().setDisable(false);
                     deactivateAllBroodjesEnBelegen();
+                    view.getTeBetalen().setText("Te betalen: €0");
                 }
             }
         });
@@ -199,8 +200,15 @@ public class OrderViewController implements Observer {
             @Override
             public void handle(ActionEvent event) {
                 view.getTeBetalen().setText("Te betalen: €" + getPrijsBestelling());
+                deactivateAllBroodjesEnBelegen();
+                view.getVerwijderBroodje().setDisable(true);
+                view.getDuplicateOrderBtn().setDisable(true);
+                view.getAfsluitBestelling().setDisable(true);
+                view.getBetaal().setDisable(false);
+                view.getNaarKeuken().setDisable(false);
             }
         });
+
     }
 
     @Override
