@@ -56,5 +56,13 @@ public class BelegDatabase{
         return res;
     }
 
+    public Map<String, Integer> getVerkochtLijstBelegen() {
+        Map<String, Integer> res = new TreeMap<>();
+        for (BelegSoort beleg: belegen) {
+            res.put(beleg.getBelegnaam(), beleg.getVerkocht());
+        }
+        return res;
+    }
+
 
 }

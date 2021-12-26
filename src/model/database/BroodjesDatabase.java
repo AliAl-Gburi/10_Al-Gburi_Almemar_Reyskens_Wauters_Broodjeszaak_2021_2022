@@ -52,6 +52,14 @@ public class BroodjesDatabase{
         return res;
     }
 
+    public Map<String, Integer> getVerkochtLijstBroodjes() {
+        Map<String, Integer> res = new TreeMap<>();
+        for (Broodje broodje: broodjeList) {
+            res.put(broodje.getBroodjesnaam(), broodje.getVerkocht());
+        }
+        return res;
+    }
+
 
 
 

@@ -159,6 +159,13 @@ public class BestelFacade implements Subject{
         return belegDatabase.getBelegen();
     }
 
+    public Map<String, Integer> getVerkochtLijstBroodjes() {
+        return BroodjesDatabase.getBroodjesDatabase().getVerkochtLijstBroodjes();
+    }
+    public Map<String, Integer> getVerkochtLijstBelegen() {
+        return BelegDatabase.getDatabase().getVerkochtLijstBelegen();
+    }
+
 
 
     @Override

@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.chart.XYChart;
 import model.BelegSoort;
 import model.BestelFacade;
 import model.Broodje;
@@ -13,7 +14,7 @@ import model.database.BroodjesDatabase;
 import view.AdminView;
 
 import java.io.*;
-import java.util.Properties;
+import java.util.*;
 
 public class AdminController implements Observer {
     private AdminView view;
@@ -33,6 +34,7 @@ public class AdminController implements Observer {
     public void initialize() {
         facade.notifyObservers();
         loadSelectedSettings();
+        loadStatistiek();
         saveSetting();
     }
 
@@ -72,6 +74,28 @@ public class AdminController implements Observer {
                 }
             }
         });
+    }
+    private void loadStatistiek() {
+        List<Broodje> broodjes = facade.getBroodjesList();
+        List<BelegSoort> belegen = facade.getBelegenList();
+        List<String> broodjesEnBelegen = new ArrayList<>();
+        for (Broodje b: broodjes) {
+            broodjesEnBelegen.add(b.getBroodjesnaam());
+        }
+        for (BelegSoort b: belegen) {
+            broodjesEnBelegen.add(b.getBelegnaam());
+        }
+        view.getAdminMainPane().getStatistiekPane().getXaxis().setCategories(FXCollections.<String>observableArrayList(broodjesEnBelegen));
+
+        for (String naam:broodjesEnBelegen) {
+            if(facade.getVerkochtLijstBroodjes().containsKey(naam)) {
+                view.getAdminMainPane().getStatistiekPane().getSeries().getData().add(new XYChart.Data<>(naam, facade.getVerkochtLijstBroodjes().get(naam)));
+            }
+            if(facade.getVerkochtLijstBelegen().containsKey(naam)) {
+                view.getAdminMainPane().getStatistiekPane().getSeries().getData().add(new XYChart.Data<>(naam, facade.getVerkochtLijstBelegen().get(naam)));
+            }
+        }
+
     }
 
     @Override
