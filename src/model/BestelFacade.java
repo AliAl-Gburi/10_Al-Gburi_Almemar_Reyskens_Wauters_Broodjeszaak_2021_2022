@@ -209,15 +209,7 @@ public class BestelFacade implements Subject {
         return kortingStrategy.prijsMetKorting(bestelling);
     }
 
-    public String getGeenKortingNaam() {
-        return KortingStrategyEnum.GEENKORTING.getStringvalue();
-    }
-    public String getGoedkoopsteBroodjeGratis() {
-        return KortingStrategyEnum.KORTINGCHEAPESTSANWICH.getStringvalue();
-    }
-    public String getTienPercentAanBestelling() {
-        return KortingStrategyEnum.KORTINGTIENPERCENT.getStringvalue();
-    }
+
 
     public void setDefaultKorting(String defaultKorting) {
         this.defaultKorting = defaultKorting;

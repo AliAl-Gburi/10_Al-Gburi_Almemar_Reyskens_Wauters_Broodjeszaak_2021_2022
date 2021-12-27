@@ -57,7 +57,7 @@ public class Bestelling {
         for (Bestellijn bestellijn : bestellijnList ) {
             prijs+= bestellijn.getPrijs();
         }
-        return prijs;
+        return Math.round(prijs * 100.0) / 100.0;
     }
 
     public Bestellijn getGoedkoopsteBroodje() {
