@@ -6,6 +6,9 @@ import jxl.read.biff.BiffException;
 import model.database.BelegDatabase;
 import model.database.BroodjesDatabase;
 import model.database.loadSaveStrategies.LoadSaveStrategyEnum;
+import model.kortingStrategies.KortingStrategy;
+import model.kortingStrategies.KortingStrategyEnum;
+import model.kortingStrategies.KortingStrategyFactory;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -184,11 +187,13 @@ public class BestelFacade implements Subject {
         bestellijn.setPrijs(prijs);
     }
 
-    public double getPrijsBestelling() {
+    public double getPrijsBestelling(KortingStrategyEnum kortingStrategyEnum) throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         for (Bestellijn bestellijn : bestelling.getBestellijnList()) {
             berekenPrijsBestellijn(bestellijn);
         }
-        return bestelling.berekenPrijs();
+        //double prijs = bestelling.berekenPrijs();
+        KortingStrategy kortingStrategy = KortingStrategyFactory.createStrategy(kortingStrategyEnum);
+        return kortingStrategy.prijsMetKorting(bestelling);
     }
 
     @Override

@@ -9,7 +9,12 @@ import javafx.scene.control.Button;
 import model.*;
 import model.database.BelegDatabase;
 import model.database.BroodjesDatabase;
+import model.kortingStrategies.GeenKorting;
+import model.kortingStrategies.KortingStrategy;
+import model.kortingStrategies.KortingStrategyEnum;
 import view.OrderView;
+
+import java.lang.reflect.InvocationTargetException;
 
 public class OrderViewController implements Observer {
     private BestelFacade facade;
@@ -160,14 +165,6 @@ public class OrderViewController implements Observer {
 
     }
 
-    public void berekenPrijsBestellijn(Bestellijn bestellijn) {
-        facade.berekenPrijsBestellijn(bestellijn);
-    }
-
-    public double getPrijsBestelling() {
-        return facade.getPrijsBestelling();
-    }
-
     private boolean availableBroodjeVoorraad(String item) {
         return facade.getVoorraadLijstBroodjes().get(item) > 0;
     }
@@ -199,7 +196,53 @@ public class OrderViewController implements Observer {
         view.getAfsluitBestelling().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.getTeBetalen().setText("Te betalen: €" + getPrijsBestelling());
+                String korting = view.getKorting();
+                if (korting == null || korting.equals("Geen korting") || korting.isEmpty()) {
+                    try {
+                        view.getTeBetalen().setText("Te betalen: €" + facade.getPrijsBestelling(KortingStrategyEnum.GEENKORTING));
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchMethodException e) {
+                        e.printStackTrace();
+                    } catch (InstantiationException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (korting != null && korting.equals("Goedkoopste broodje gratis")) {
+                    try {
+                        view.getTeBetalen().setText("Te betalen: €" + facade.getPrijsBestelling(KortingStrategyEnum.KORTINGCHEAPESTSANWICH));
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchMethodException e) {
+                        e.printStackTrace();
+                    } catch (InstantiationException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (korting != null && korting.equals("10% korting op bestelling")) {
+                    try {
+                        view.getTeBetalen().setText("Te betalen: €" + facade.getPrijsBestelling(KortingStrategyEnum.KORTINGTIENPERCENT));
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchMethodException e) {
+                        e.printStackTrace();
+                    } catch (InstantiationException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+
                 deactivateAllBroodjesEnBelegen();
                 view.getVerwijderBroodje().setDisable(true);
                 view.getDuplicateOrderBtn().setDisable(true);

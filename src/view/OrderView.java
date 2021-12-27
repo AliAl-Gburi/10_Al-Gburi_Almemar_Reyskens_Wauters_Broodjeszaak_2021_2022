@@ -41,6 +41,7 @@ public class OrderView {
 	private Button afsluitBestelling;
 	private Button betaal;
 	private Button naarKeuken;
+	ChoiceBox<String> kortings;
 
 	public OrderView(OrderViewController controller){
 		stage.setTitle("ORDER VIEW");
@@ -74,8 +75,8 @@ public class OrderView {
 		Label volgnr = new Label("Volgnr: 0");
 		nieuwBestellingBtn = new Button("Nieuwe Bestelling");
 
-		ChoiceBox<String> kortings = new ChoiceBox<>();
-		kortings.getItems().addAll("Goedkoopste broodje gratis", "50% aan alle bestellingen");
+		kortings = new ChoiceBox<>();
+		kortings.getItems().addAll("Geen korting","Goedkoopste broodje gratis", "10% korting op bestelling");
 		topbox.getChildren().addAll(nieuwBestellingBtn, volgnr, kortings);
 
 		aantalBroodjes = new Label("Aantal broodjes: 0");
@@ -170,6 +171,9 @@ public class OrderView {
 	}
 	public Button getNaarKeuken() {
 		return this.naarKeuken;
+	}
+	public String getKorting() {
+		return kortings.getValue();
 	}
 
 }
