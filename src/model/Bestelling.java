@@ -1,18 +1,44 @@
 package model;
 
+import model.bestelStates.BestellingState;
+import model.bestelStates.InBestelling;
+import model.bestelStates.InWacht;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Bestelling {
     private List<Bestellijn> bestellijnList;
+    private BestellingState inWacht;
+    private BestellingState inBestelling;
+
+    private BestellingState state;
 
     public Bestelling() {
+        inWacht = new InWacht(this);
+        inBestelling = new InBestelling(this);
+        state = inWacht;
         bestellijnList = new ArrayList<>();
     }
 
+    public void setState(BestellingState state) {
+        this.state = state;
+    }
+
+    public BestellingState getInBestelling() {
+        return this.inBestelling;
+    }
+
+    public BestellingState getInWacht() {
+        return this.inWacht;
+    }
+
+    public BestellingState getState() {
+        return this.state;
+    }
+
     public void voegBestelLijnToe(String naamBroodje) {
-        Bestellijn lijn = new Bestellijn(naamBroodje);
-        bestellijnList.add(lijn);
+        state.voegBestelLijnToe(naamBroodje);
     }
     public List<Bestellijn> getBestellijnList() {
         return this.bestellijnList;

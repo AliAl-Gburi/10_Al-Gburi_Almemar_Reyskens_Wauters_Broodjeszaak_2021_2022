@@ -113,6 +113,7 @@ public class OrderView {
 		HBox botsec = new HBox(8);
 		botsec.setPadding(new Insets(10));
 		afsluitBestelling = new Button("Afsluiten Bestelling");
+		afsluitBestelling.setDisable(true);
 		tebetalen = new Label("Te betalen: €0");
 		tebetalen.setPadding(new Insets(5));
 		betaal = new Button("Betaal");

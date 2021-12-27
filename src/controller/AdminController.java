@@ -41,7 +41,7 @@ public class AdminController implements Observer {
 
     private void loadKortingsLijstEnDBFormatLijst() {
         view.getAdminMainPane().getSettingsPane().getFileFormat().getItems().addAll("excel", "text");
-        view.getAdminMainPane().getSettingsPane().getKortingsList().getItems().addAll(facade.getGeenKortingNaam(), facade.getGoedkoopsteBroodjeGratis(), facade.getTienPercentAanBestelling());
+        view.getAdminMainPane().getSettingsPane().getKortingsList().getItems().addAll("Geen korting", "Goedkoopste broodje gratis", "10% korting op bestelling");
     }
 
     private void loadSelectedSettings() {

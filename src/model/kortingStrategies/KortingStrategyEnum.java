@@ -1,7 +1,7 @@
 package model.kortingStrategies;
 
 public enum KortingStrategyEnum {
-    GEENKORTING("Geen korting"),KORTINGCHEAPESTSANWICH("Goedkoopste broodje gratis"), KORTINGTIENPERCENT("10% korting op bestelling");
+    GEENKORTING("GeenKorting"),KORTINGCHEAPESTSANWICH("KortingCheapestSandwich"), KORTINGTIENPERCENT("KortingTienPercent");
     private String stringvalue;
 
     private KortingStrategyEnum(String stringvalue) {

@@ -46,7 +46,7 @@ public class OrderViewController implements Observer {
     }
 
     private void loadKortingsLijst() {
-        view.getKortings().getItems().addAll(facade.getGeenKortingNaam(), facade.getGoedkoopsteBroodjeGratis(), facade.getTienPercentAanBestelling());
+        view.getKortings().getItems().addAll("Geen korting", "Goedkoopste broodje gratis", "10% korting op bestelling");
         view.getKortings().getSelectionModel().select(facade.getDefaultKorting());
     }
 
@@ -54,8 +54,10 @@ public class OrderViewController implements Observer {
         view.getNieuwBestellingBtn().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.getNieuwBestellingBtn().setDisable(true);
                 facade.nieuwBestelling();
+                view.getNieuwBestellingBtn().setDisable(true);
+                view.getAfsluitBestelling().setDisable(false);
+                facade.setBestellingState(facade.getInBestellingState());
                 voorraadChecker();
                 volgnr++;
                 view.getVolgnr().setText("Volgnr: " + volgnr);
@@ -149,6 +151,8 @@ public class OrderViewController implements Observer {
                 } else {
                     facade.annuleerBestelling();
                     view.getNieuwBestellingBtn().setDisable(false);
+                    volgnr--;
+                    view.getVolgnr().setText("Volgnr: " + volgnr);
                     deactivateAllBroodjesEnBelegen();
                     view.getTeBetalen().setText("Te betalen: €0");
                 }

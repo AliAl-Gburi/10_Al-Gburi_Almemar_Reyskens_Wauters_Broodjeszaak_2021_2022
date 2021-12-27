@@ -3,6 +3,7 @@ package model;
 import controller.AdminController;
 import controller.OrderViewController;
 import jxl.read.biff.BiffException;
+import model.bestelStates.BestellingState;
 import model.database.BelegDatabase;
 import model.database.BroodjesDatabase;
 import model.database.loadSaveStrategies.LoadSaveStrategyEnum;
@@ -70,6 +71,17 @@ public class BestelFacade implements Subject {
 
     public void nieuwBestelling() {
         bestelling = new Bestelling();
+    }
+
+    public void setBestellingState(BestellingState state) {
+        bestelling.setState(state);
+    }
+
+    public BestellingState getInWachtState(){
+        return bestelling.getInWacht();
+    }
+    public BestellingState getInBestellingState(){
+        return bestelling.getInBestelling();
     }
 
     public boolean enoughtoDupe() {
