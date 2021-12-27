@@ -25,8 +25,6 @@ import java.util.TreeMap;
 
 public class OrderView {
 	private Stage stage = new Stage();
-	private BroodjesDatabase broodjesDatabase = BroodjesDatabase.getBroodjesDatabase();
-	private BelegDatabase belegDatabase = BelegDatabase.getDatabase();
 	private Map<String, Button> broojebuttons;
 	private Map<String, Button> belegButtons;
 	private Button nieuwBestellingBtn;
@@ -97,7 +95,9 @@ public class OrderView {
 		VBox rightBox = new VBox(8);
 		Label selecteer = new Label("Selecteer lijn in lijst");
 		duplicateOrderBtn = new Button("Voeg zelfde broodje toe");
+		duplicateOrderBtn.setDisable(true);
 		verwijderBroodje = new Button("Verwijder broodje");
+		verwijderBroodje.setDisable(true);
 
 		VBox anbox = new VBox(8);
 		anbox.setPadding(new Insets(184, 0, 0, 0));

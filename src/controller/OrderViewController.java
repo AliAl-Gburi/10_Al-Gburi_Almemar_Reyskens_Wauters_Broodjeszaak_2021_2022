@@ -41,6 +41,8 @@ public class OrderViewController implements Observer {
         verwijderBroodje();
         annuleerBestelling();
         afsluitBestelling();
+        betaal();
+        naarKeuken();
         view.getVolgnr().setText("Volgnr: " + volgnr);
 
     }
@@ -57,6 +59,8 @@ public class OrderViewController implements Observer {
                 facade.nieuwBestelling();
                 view.getNieuwBestellingBtn().setDisable(true);
                 view.getAfsluitBestelling().setDisable(false);
+                view.getDuplicateOrderBtn().setDisable(false);
+                view.getVerwijderBroodje().setDisable(false);
                 facade.setBestellingState(facade.getInBestellingState());
                 voorraadChecker();
                 volgnr++;
@@ -262,10 +266,34 @@ public class OrderViewController implements Observer {
                 view.getDuplicateOrderBtn().setDisable(true);
                 view.getAfsluitBestelling().setDisable(true);
                 view.getBetaal().setDisable(false);
-                view.getNaarKeuken().setDisable(false);
+
             }
         });
 
+    }
+
+    private void betaal() {
+        view.getBetaal().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                view.getNaarKeuken().setDisable(false);
+                view.getTeBetalen().setText("Te betalen €0");
+                view.getBetaal().setDisable(true);
+            }
+        });
+    }
+
+    private void naarKeuken() {
+        view.getNaarKeuken().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                facade.nieuwBestelling();
+                
+                view.getNieuwBestellingBtn().setDisable(false);
+                view.getNaarKeuken().setDisable(true);
+                facade.notifyObservers();
+            }
+        });
     }
 
     @Override

@@ -17,6 +17,7 @@ import java.util.*;
 
 public class BestelFacade implements Subject {
     private Bestelling bestelling;
+    private List<Bestelling> bestellingWachtRij;
     private final List<Observer> observers;
     private BroodjesDatabase broodjesDatabase;
     private BelegDatabase belegDatabase;
@@ -28,6 +29,7 @@ public class BestelFacade implements Subject {
 
         loadDatabase();
         observers = new ArrayList<>();
+        bestellingWachtRij = new ArrayList<>();
         event = BestellingEvents.LOAD_DATABASE;
         nieuwBestelling();
     }
