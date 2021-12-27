@@ -31,13 +31,13 @@ public class Bestelling {
         for (Bestellijn bestellijn : bestellijnList ) {
             prijs+= bestellijn.getPrijs();
         }
-        return Math.round(prijs);
+        return prijs;
     }
 
     public Bestellijn getGoedkoopsteBroodje() {
         Bestellijn goedkoopsteBroodje = bestellijnList.get(0);
         for (Bestellijn bestellijn : bestellijnList ) {
-            if (bestellijn.getBelegsoorten() != null && !bestellijn.getBelegsoorten().isEmpty() && bestellijn.getPrijs() < goedkoopsteBroodje.getPrijs()) {
+            if ((bestellijn.getBelegsoorten() != null && !bestellijn.getBelegsoorten().isEmpty()) && bestellijn.getPrijs() < goedkoopsteBroodje.getPrijs()) {
                 goedkoopsteBroodje = bestellijn;
             }
         } return goedkoopsteBroodje;
