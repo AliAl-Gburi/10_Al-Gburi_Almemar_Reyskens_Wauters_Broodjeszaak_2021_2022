@@ -41,6 +41,7 @@ public class OrderView {
 	private Button afsluitBestelling;
 	private Button betaal;
 	private Button naarKeuken;
+	private Label volgnr;
 	ChoiceBox<String> kortings;
 
 	public OrderView(OrderViewController controller){
@@ -72,7 +73,7 @@ public class OrderView {
 		HBox topbox = new HBox(8);;
 		topbox.setPadding(new Insets(10));
 
-		Label volgnr = new Label("Volgnr: 0");
+		volgnr = new Label("Volgnr: 0");
 		nieuwBestellingBtn = new Button("Nieuwe Bestelling");
 
 		kortings = new ChoiceBox<>();
@@ -174,6 +175,9 @@ public class OrderView {
 	}
 	public String getKorting() {
 		return kortings.getValue();
+	}
+	public Label getVolgnr() {
+		return this.volgnr;
 	}
 
 }

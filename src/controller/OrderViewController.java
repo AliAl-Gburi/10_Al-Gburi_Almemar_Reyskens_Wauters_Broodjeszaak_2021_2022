@@ -20,6 +20,7 @@ public class OrderViewController implements Observer {
     private BestelFacade facade;
     private OrderView view;
     private ObservableList<Bestellijn> bestellijnObservableList;
+    private int volgnr;
 
     public OrderViewController(BestelFacade facade) {
         this.facade = facade;
@@ -39,6 +40,7 @@ public class OrderViewController implements Observer {
         verwijderBroodje();
         annuleerBestelling();
         afsluitBestelling();
+        view.getVolgnr().setText("Volgnr: " + volgnr);
 
     }
 
@@ -49,6 +51,8 @@ public class OrderViewController implements Observer {
                 view.getNieuwBestellingBtn().setDisable(true);
                 facade.nieuwBestelling();
                 voorraadChecker();
+                volgnr++;
+                view.getVolgnr().setText("Volgnr: " + volgnr);
 
             }
         });
