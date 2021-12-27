@@ -20,6 +20,7 @@ public class BestelFacade implements Subject {
     private BroodjesDatabase broodjesDatabase;
     private BelegDatabase belegDatabase;
     private BestellingEvents event;
+    private String defaultKorting;
 
 
     public BestelFacade() throws BiffException, IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
@@ -194,6 +195,23 @@ public class BestelFacade implements Subject {
         //double prijs = bestelling.berekenPrijs();
         KortingStrategy kortingStrategy = KortingStrategyFactory.createStrategy(kortingStrategyEnum);
         return kortingStrategy.prijsMetKorting(bestelling);
+    }
+
+    public String getGeenKortingNaam() {
+        return KortingStrategyEnum.GEENKORTING.getStringvalue();
+    }
+    public String getGoedkoopsteBroodjeGratis() {
+        return KortingStrategyEnum.KORTINGCHEAPESTSANWICH.getStringvalue();
+    }
+    public String getTienPercentAanBestelling() {
+        return KortingStrategyEnum.KORTINGTIENPERCENT.getStringvalue();
+    }
+
+    public void setDefaultKorting(String defaultKorting) {
+        this.defaultKorting = defaultKorting;
+    }
+    public String getDefaultKorting() {
+        return this.defaultKorting;
     }
 
     @Override

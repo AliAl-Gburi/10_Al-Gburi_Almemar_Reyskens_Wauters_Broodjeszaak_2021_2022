@@ -34,6 +34,7 @@ public class OrderViewController implements Observer {
     public void initialize() {
         nieuweBestelling();
         loadBroodjeEnBelegKnopen();
+        loadKortingsLijst();
         broodjeListener();
         belegListener();
         voegZelfdeBestelling();
@@ -42,6 +43,11 @@ public class OrderViewController implements Observer {
         afsluitBestelling();
         view.getVolgnr().setText("Volgnr: " + volgnr);
 
+    }
+
+    private void loadKortingsLijst() {
+        view.getKortings().getItems().addAll(facade.getGeenKortingNaam(), facade.getGoedkoopsteBroodjeGratis(), facade.getTienPercentAanBestelling());
+        view.getKortings().getSelectionModel().select(facade.getDefaultKorting());
     }
 
     public void nieuweBestelling() {

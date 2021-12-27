@@ -35,7 +35,13 @@ public class AdminController implements Observer {
         facade.notifyObservers();
         loadSelectedSettings();
         loadStatistiek();
+        loadKortingsLijstEnDBFormatLijst();
         saveSetting();
+    }
+
+    private void loadKortingsLijstEnDBFormatLijst() {
+        view.getAdminMainPane().getSettingsPane().getFileFormat().getItems().addAll("excel", "text");
+        view.getAdminMainPane().getSettingsPane().getKortingsList().getItems().addAll(facade.getGeenKortingNaam(), facade.getGoedkoopsteBroodjeGratis(), facade.getTienPercentAanBestelling());
     }
 
     private void loadSelectedSettings() {
@@ -45,7 +51,11 @@ public class AdminController implements Observer {
             properties.load(is);
             Object format = properties.getProperty("databaseFormat");
             String dbFormat = (String) format;
-            view.getAdminMainPane().getSettingsPane().getFileFormat().setPromptText(dbFormat);
+            Object korting = properties.getProperty("defaultKorting");
+            String kortingString = (String) korting;
+            view.getAdminMainPane().getSettingsPane().getFileFormat().getSelectionModel().select(dbFormat);
+            view.getAdminMainPane().getSettingsPane().getKortingsList().getSelectionModel().select(kortingString);
+            facade.setDefaultKorting(kortingString);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -60,13 +70,20 @@ public class AdminController implements Observer {
                 Properties properties = new Properties();
                 try {
                     String value = view.getAdminMainPane().getSettingsPane().getFileFormat().getValue();
-                    if (value != null) {
-                        FileOutputStream os = new FileOutputStream("src/bestanden/settings.properties");
+                    String defaultKoting = view.getAdminMainPane().getSettingsPane().getKortingsList().getValue();
+                    FileOutputStream os = new FileOutputStream("src/bestanden/settings.properties");
+                    if (value != null && defaultKoting != null) {
+
                         properties.setProperty("databaseFormat", value);
+                        properties.setProperty("defaultKorting", defaultKoting);
+                        facade.setDefaultKorting(defaultKoting);
                         properties.store(os, "done");
-                        os.close();
+
                     }
+
+                    os.close();
                     view.getAdminMainPane().getSettingsPane().getSaveLabel().setText("Your setting have been saved");
+                    facade.notifyObservers();
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {

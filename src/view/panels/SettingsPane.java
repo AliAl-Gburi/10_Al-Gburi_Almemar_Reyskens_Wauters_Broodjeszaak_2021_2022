@@ -13,7 +13,7 @@ import javafx.scene.layout.VBox;
 
 public class SettingsPane extends GridPane {
     private ChoiceBox<String> kortings;
-    private ComboBox<String> fileFormat;
+    private ChoiceBox<String> fileFormat;
     private Button saveBtn;
     private Label saveLabel;
 
@@ -29,13 +29,11 @@ public class SettingsPane extends GridPane {
 
         Label kortingslabel = new Label("Default Kortings Strategy: ");
         kortings = new ChoiceBox<>();
-        kortings.getItems().addAll("Goedkoopste broodje gratis", "50% aan alle bestellingen");
         kortingsBox.getChildren().addAll(kortingslabel, kortings);
 
         Label fileFormatLabel = new Label("File format: ");
-        fileFormat = new ComboBox<>();
+        fileFormat = new ChoiceBox<>();
         fileFormat.setPadding(new Insets(0, 0, 0, 10));
-        fileFormat.getItems().addAll("text", "excel");
         fileFormatBox.getChildren().addAll(fileFormatLabel, fileFormat);
 
         saveBtn = new Button("Save");
@@ -57,7 +55,7 @@ public class SettingsPane extends GridPane {
         return this.kortings;
     }
 
-    public ComboBox<String> getFileFormat() {
+    public ChoiceBox<String> getFileFormat() {
         return this.fileFormat;
     }
 

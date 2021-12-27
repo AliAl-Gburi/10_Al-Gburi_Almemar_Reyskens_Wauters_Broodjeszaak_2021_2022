@@ -23,8 +23,9 @@ public class BroodjeszaakMain extends Application {
 		AdminView adminView = new AdminView(adminController);
 
 		OrderView orderView = new OrderView(orderViewController);
-		orderViewController.initialize();
 		adminController.initialize();
+		orderViewController.initialize();
+
 		KitchenView kitchenView = new KitchenView();
 	}
 	
