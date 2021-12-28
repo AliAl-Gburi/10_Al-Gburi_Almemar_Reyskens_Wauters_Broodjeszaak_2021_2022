@@ -55,7 +55,7 @@ public class Bestelling {
         double prijs = 0;
 
         for (Bestellijn bestellijn : bestellijnList ) {
-            prijs+= bestellijn.getPrijs();
+            prijs += bestellijn.getPrijs();
         }
         return Math.round(prijs * 100.0) / 100.0;
     }
@@ -66,7 +66,8 @@ public class Bestelling {
             if ((bestellijn.getBelegsoorten() != null && !bestellijn.getBelegsoorten().isEmpty()) && bestellijn.getPrijs() < goedkoopsteBroodje.getPrijs()) {
                 goedkoopsteBroodje = bestellijn;
             }
-        } return goedkoopsteBroodje;
+        }
+        return goedkoopsteBroodje;
     }
 
 

@@ -218,45 +218,21 @@ public class OrderViewController implements Observer {
                 if (korting == null || korting.equals("Geen korting") || korting.isEmpty()) {
                     try {
                         view.getTeBetalen().setText("Te betalen: €" + facade.getPrijsBestelling(KortingStrategyEnum.GEENKORTING));
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (InvocationTargetException e) {
-                        e.printStackTrace();
-                    } catch (NoSuchMethodException e) {
-                        e.printStackTrace();
-                    } catch (InstantiationException e) {
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
+                    } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
                         e.printStackTrace();
                     }
                 }
                 if (korting != null && korting.equals("Goedkoopste broodje gratis")) {
                     try {
                         view.getTeBetalen().setText("Te betalen: €" + facade.getPrijsBestelling(KortingStrategyEnum.KORTINGCHEAPESTSANWICH));
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (InvocationTargetException e) {
-                        e.printStackTrace();
-                    } catch (NoSuchMethodException e) {
-                        e.printStackTrace();
-                    } catch (InstantiationException e) {
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
+                    } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
                         e.printStackTrace();
                     }
                 }
                 if (korting != null && korting.equals("10% korting op bestelling")) {
                     try {
                         view.getTeBetalen().setText("Te betalen: €" + facade.getPrijsBestelling(KortingStrategyEnum.KORTINGTIENPERCENT));
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (InvocationTargetException e) {
-                        e.printStackTrace();
-                    } catch (NoSuchMethodException e) {
-                        e.printStackTrace();
-                    } catch (InstantiationException e) {
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
+                    } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
                         e.printStackTrace();
                     }
                 }
