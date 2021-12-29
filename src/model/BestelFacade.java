@@ -21,6 +21,11 @@ public class BestelFacade implements Subject {
     private final List<Observer> observers;
     private BroodjesDatabase broodjesDatabase;
     private BelegDatabase belegDatabase;
+
+    public BestellingEvents getEvent() {
+        return event;
+    }
+
     private BestellingEvents event;
     private String defaultKorting;
 
@@ -52,8 +57,6 @@ public class BestelFacade implements Subject {
                 broodjesDatabase = BroodjesDatabase.getInstance(broodjesfile, LoadSaveStrategyEnum.BROODJESEXCELLOADSAVESTRATEGY);
                 belegDatabase = BelegDatabase.getInstance(belegfile, LoadSaveStrategyEnum.BELEGEXCELLOADSAVESTRATEGY);
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException | BiffException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -67,10 +70,11 @@ public class BestelFacade implements Subject {
         bestelling.setState(state);
     }
 
-    public BestellingState getInWachtState(){
+    public BestellingState getInWachtState() {
         return bestelling.getInWacht();
     }
-    public BestellingState getInBestellingState(){
+
+    public BestellingState getInBestellingState() {
         return bestelling.getInBestelling();
     }
 
@@ -200,10 +204,10 @@ public class BestelFacade implements Subject {
     }
 
 
-
     public void setDefaultKorting(String defaultKorting) {
         this.defaultKorting = defaultKorting;
     }
+
     public String getDefaultKorting() {
         return this.defaultKorting;
     }
@@ -232,6 +236,9 @@ public class BestelFacade implements Subject {
                     if (o instanceof AdminController) {
                         o.update(broodjesDatabase, belegDatabase);
                     }
+                    break;
+                case NAAR_KEUKEN:
+                    o.update(broodjesDatabase, belegDatabase);
                     break;
             }
 

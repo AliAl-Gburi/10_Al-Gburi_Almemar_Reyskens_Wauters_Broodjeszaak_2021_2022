@@ -259,6 +259,7 @@ public class OrderViewController implements Observer {
         });
     }
 
+    //todo fix stuff here
     private void naarKeuken() {
         view.getNaarKeuken().setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -268,7 +269,6 @@ public class OrderViewController implements Observer {
                 bestelling.setVolgnr(volgnr);
                 facade.getBestellingWachtRij().add(bestelling);
                 facade.nieuwBestelling();
-
                 view.getNieuwBestellingBtn().setDisable(false);
                 view.getNaarKeuken().setDisable(true);
                 facade.notifyObservers();

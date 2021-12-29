@@ -1,6 +1,7 @@
 package application;
-	
+
 import controller.AdminController;
+import controller.KitchenViewController;
 import controller.OrderViewController;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -21,14 +22,18 @@ public class BroodjeszaakMain extends Application {
 		OrderViewController orderViewController = new OrderViewController(facade);
 		AdminController adminController = new AdminController(facade);
 		AdminView adminView = new AdminView(adminController);
+		adminController.initialize();
 
 		OrderView orderView = new OrderView(orderViewController);
 		adminController.initialize();
 		orderViewController.initialize();
+		orderViewController.initialize();
 
-		KitchenView kitchenView = new KitchenView();
+		KitchenViewController kvc = new KitchenViewController(facade);
+		KitchenView kitchenView = new KitchenView(kvc);
+		kvc.initialize();
 	}
-	
+
 	public static void main(String[] args) {
 		launch(args);
 	}

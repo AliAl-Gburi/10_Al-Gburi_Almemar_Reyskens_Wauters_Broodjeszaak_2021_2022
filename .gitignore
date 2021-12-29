@@ -1,2 +1,6 @@
-/out/
+/ExcelPlugin.jar
+/jxl-2.6.12.jar
+/.idea/
+*.iml
 
+/out/
