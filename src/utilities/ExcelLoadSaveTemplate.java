@@ -1,11 +1,14 @@
 package utilities;
 
 import jxl.read.biff.BiffException;
+import jxl.write.WriteException;
+import jxl.write.biff.RowsExceededException;
 import utilities.ExcelPlugin;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -25,7 +28,24 @@ public abstract class ExcelLoadSaveTemplate<K,V>{
         return resMap;
     }
 
-    public void save(File file, Map db) {
+    public void save(File file, Map<K,V> db) {
+        ArrayList<ArrayList<String>> res = new ArrayList<>();
+        for (K key: db.keySet()) {
+            String dataset = db.get(key).toString();
+            String[] list = dataset.split(",");
+            ArrayList<String> arraylist = new ArrayList<>(Arrays.asList(list));
+            res.add(arraylist);
+        }try {
+            excelPlugin.write(file, res);
+        } catch (BiffException e) {
+            e.printStackTrace();
+        } catch (RowsExceededException e) {
+            e.printStackTrace();
+        } catch (WriteException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

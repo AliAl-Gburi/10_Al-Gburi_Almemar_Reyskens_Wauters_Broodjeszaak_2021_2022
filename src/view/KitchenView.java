@@ -1,89 +1,78 @@
 package view;
 
 import controller.KitchenViewController;
+import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import javafx.scene.control.Label;
-
-
 public class KitchenView {
+	private Button volgendeBestelling;
+	private Button bestellingAfgewerkt;
+	private Label wachtRij;
+	private Label bestellingBeschrijving;
+	
+	private Stage stage = new Stage();		
+	
+	public KitchenView(KitchenViewController controller){
+		stage.setTitle("KITCHEN VIEW");
+		stage.initStyle(StageStyle.UTILITY);
+		stage.setX(680);
+		stage.setY(470);
+		Pane root = createNodeHierarchy();
+		Scene scene = new Scene(root, 650, 200);			
+		stage.setScene(scene);
+		stage.sizeToScene();			
+		stage.show();
+		controller.setView(this);
+	}
 
-    private Stage stage = new Stage();
-    private Button volgendeBestelling;
-    private Button bestellingAfgewerkt;
-    private Label orderDescription;
-    private Label queue;
+	private Pane createNodeHierarchy() {
+		VBox mainBox = new VBox(8);
+		VBox wachtrijBox = new VBox(8);
+		HBox bestellingBeschrijvingBox = new HBox(8);
+		HBox knopenBox = new HBox(8);
+
+		wachtRij = new Label("Aantal Bestellingen in de wachtrij: 0");
+		bestellingBeschrijving = new Label("Er is momenteel geen bestelling in het keuken\n\n\n");
+		volgendeBestelling = new Button("Volgende Bestelling");
+		volgendeBestelling.setDisable(true);
+		bestellingAfgewerkt = new Button("Bestelling afgewerkt");
+		bestellingAfgewerkt.setDisable(true);
+		wachtrijBox.setPadding(new Insets(0,0,10,0));
+		wachtrijBox.getChildren().add(wachtRij);
 
 
-    public KitchenView(KitchenViewController kvc) {
-        stage.setTitle("KITCHEN VIEW");
-        stage.initStyle(StageStyle.UTILITY);
-        stage.setX(680);
-        stage.setY(470);
-        Pane root = createNodeHierarchyKitchenView();
-        Scene scene = new Scene(root, 650, 200);
-        stage.setScene(scene);
-        stage.sizeToScene();
-        stage.show();
-        kvc.setView(this);
-    }
+		knopenBox.getChildren().addAll(volgendeBestelling, bestellingAfgewerkt);
+		knopenBox.setPadding(new Insets(110, 0,0,90));
+		bestellingBeschrijvingBox.getChildren().addAll(bestellingBeschrijving,knopenBox );
 
-    public Pane createNodeHierarchyKitchenView() {
-        Pane mainBox = new VBox(8);
-        Pane orderDescriptionBox = new VBox(8);
-        Pane queueBox = new VBox(8);
-        Pane buttons = new VBox(8);
 
-        orderDescription = new Label(" ");
-        queue = new Label("Aantal bestellingen in wachtrij:");
+		mainBox.getChildren().addAll(wachtrijBox,bestellingBeschrijvingBox);
+		mainBox.setPadding(new Insets(15));
 
-        volgendeBestelling = new Button("Volgende bestelling");
-        volgendeBestelling.setDisable(true);
+		return mainBox;
+	}
 
-        bestellingAfgewerkt = new Button("Bestelling afwerken");
-        bestellingAfgewerkt.setDisable(true);
-        buttons.getChildren().addAll(volgendeBestelling, bestellingAfgewerkt);
+	public Label getWachtRij() {
+		return this.wachtRij;
+	}
 
-        queueBox.getChildren().add(queue);
+	public Label getBestellingBeschrijving() {
+		return this.bestellingBeschrijving;
+	}
 
-        orderDescriptionBox.getChildren().addAll(orderDescription, buttons);
+	public Button getVolgendeBestelling() {
+		return this.volgendeBestelling;
+	}
 
-        mainBox.getChildren().addAll(orderDescriptionBox, queueBox);
-
-        return mainBox;
-    }
-
-    public Stage getStage() {
-        return stage;
-    }
-
-    public Button getVolgendeBestelling() {
-        return volgendeBestelling;
-    }
-
-    public Button getBestellingAfgewerkt() {
-        return bestellingAfgewerkt;
-    }
-
-    public Label getOrderDescription() {
-        return orderDescription;
-    }
-
-    public void setOrderDescription(Label orderDescription) {
-        this.orderDescription = orderDescription;
-    }
-
-    public Label getQueue() {
-        return queue;
-    }
-
-    public void setQueue(Label queue) {
-        this.queue = queue;
-    }
+	public Button getBestellingAfgewerkt() {
+		return this.bestellingAfgewerkt;
+	}
 }

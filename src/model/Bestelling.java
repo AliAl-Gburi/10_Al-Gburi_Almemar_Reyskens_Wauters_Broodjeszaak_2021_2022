@@ -9,9 +9,9 @@ import java.util.List;
 
 public class Bestelling {
     private List<Bestellijn> bestellijnList;
+    private int volgnr;
     private BestellingState inWacht;
     private BestellingState inBestelling;
-    private int volgnr;
 
     private BestellingState state;
 
@@ -22,12 +22,12 @@ public class Bestelling {
         bestellijnList = new ArrayList<>();
     }
 
-    public int getVolgnr() {
-        return volgnr;
-    }
-
     public void setVolgnr(int volgnr) {
         this.volgnr = volgnr;
+    }
+
+    public int getVolgnr() {
+        return this.volgnr;
     }
 
     public void setState(BestellingState state) {
@@ -44,10 +44,6 @@ public class Bestelling {
 
     public BestellingState getState() {
         return this.state;
-    }
-
-    public void setBestellijnList(List<Bestellijn> bestellijnList) {
-        this.bestellijnList = bestellijnList;
     }
 
     public void voegBestelLijnToe(String naamBroodje) {
@@ -68,7 +64,7 @@ public class Bestelling {
         double prijs = 0;
 
         for (Bestellijn bestellijn : bestellijnList ) {
-            prijs += bestellijn.getPrijs();
+            prijs+= bestellijn.getPrijs();
         }
         return Math.round(prijs * 100.0) / 100.0;
     }
@@ -79,8 +75,7 @@ public class Bestelling {
             if ((bestellijn.getBelegsoorten() != null && !bestellijn.getBelegsoorten().isEmpty()) && bestellijn.getPrijs() < goedkoopsteBroodje.getPrijs()) {
                 goedkoopsteBroodje = bestellijn;
             }
-        }
-        return goedkoopsteBroodje;
+        } return goedkoopsteBroodje;
     }
 
 

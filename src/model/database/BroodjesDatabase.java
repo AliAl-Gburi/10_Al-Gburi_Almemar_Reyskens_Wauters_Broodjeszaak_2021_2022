@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class BroodjesDatabase{
-    private Map<String, Broodje> broodjesMap;
+    public Map<String, Broodje> broodjesMap;
     private List<Broodje> broodjeList;
     private static BroodjesDatabase database;
     private LoadSaveStrategy strategy;
@@ -38,6 +38,10 @@ public class BroodjesDatabase{
 
     public static BroodjesDatabase getBroodjesDatabase() {
         return database;
+    }
+
+    public void save(File file, Map db) throws IOException {
+        strategy.save(file, db);
     }
 
     public Broodje getBroodje(String naamBroodje) {

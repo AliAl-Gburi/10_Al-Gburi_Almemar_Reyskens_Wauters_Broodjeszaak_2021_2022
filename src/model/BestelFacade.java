@@ -21,22 +21,22 @@ public class BestelFacade implements Subject {
     private final List<Observer> observers;
     private BroodjesDatabase broodjesDatabase;
     private BelegDatabase belegDatabase;
-
-    public BestellingEvents getEvent() {
-        return event;
-    }
-
     private BestellingEvents event;
     private String defaultKorting;
+    private int volgnr;
+    private File broodjesFile;
+    private File belegenFile;
 
 
-    public BestelFacade() throws BiffException, IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public BestelFacade() {
 
         loadDatabase();
         observers = new ArrayList<>();
         bestellingWachtRij = new ArrayList<>();
         event = BestellingEvents.LOAD_DATABASE;
         nieuwBestelling();
+        volgnr = 0;
+
     }
 
     public void loadDatabase() {
@@ -47,36 +47,71 @@ public class BestelFacade implements Subject {
             Object format = properties.getProperty("databaseFormat");
             String dbFormat = (String) format;
             if (dbFormat.equals("text")) {
-                File broodjesfile = new File("src/bestanden/broodjes.txt");
-                File belegfile = new File("src/bestanden/beleg.txt");
-                broodjesDatabase = BroodjesDatabase.getInstance(broodjesfile, LoadSaveStrategyEnum.BROODJESTEKSTLOADSAVESTRATEGY);
-                belegDatabase = BelegDatabase.getInstance(belegfile, LoadSaveStrategyEnum.BELEGTEKSTLOADSAVESTRATEGY);
+                broodjesFile = new File("src/bestanden/broodjes.txt");
+                belegenFile = new File("src/bestanden/beleg.txt");
+                broodjesDatabase = BroodjesDatabase.getInstance(broodjesFile, LoadSaveStrategyEnum.BROODJESTEKSTLOADSAVESTRATEGY);
+                belegDatabase = BelegDatabase.getInstance(belegenFile, LoadSaveStrategyEnum.BELEGTEKSTLOADSAVESTRATEGY);
             } else if (dbFormat.equals("excel")) {
-                File broodjesfile = new File("src/bestanden/broodjes.xls");
-                File belegfile = new File("src/bestanden/beleg.xls");
-                broodjesDatabase = BroodjesDatabase.getInstance(broodjesfile, LoadSaveStrategyEnum.BROODJESEXCELLOADSAVESTRATEGY);
-                belegDatabase = BelegDatabase.getInstance(belegfile, LoadSaveStrategyEnum.BELEGEXCELLOADSAVESTRATEGY);
+                broodjesFile = new File("src/bestanden/broodjes.xls");
+                belegenFile = new File("src/bestanden/beleg.xls");
+                broodjesDatabase = BroodjesDatabase.getInstance(broodjesFile, LoadSaveStrategyEnum.BROODJESEXCELLOADSAVESTRATEGY);
+                belegDatabase = BelegDatabase.getInstance(belegenFile, LoadSaveStrategyEnum.BELEGEXCELLOADSAVESTRATEGY);
             }
-        } catch (IOException | BiffException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (BiffException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
     }
 
+    public void save() {
+        try {
+
+            broodjesDatabase.save(broodjesFile, broodjesDatabase.broodjesMap);
+            belegDatabase.save(belegenFile, belegDatabase.belegMap);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public void nieuwBestelling() {
         bestelling = new Bestelling();
+        volgnr++;
+        bestelling.setVolgnr(volgnr);
+    }
+
+    public int getVolgnr() {
+        return this.volgnr;
+    }
+    public void setBestelling(Bestelling bestelling) {
+        this.bestelling = bestelling;
     }
 
     public void setBestellingState(BestellingState state) {
         bestelling.setState(state);
     }
 
-    public BestellingState getInWachtState() {
+    public BestellingState getInWachtState(){
         return bestelling.getInWacht();
     }
-
-    public BestellingState getInBestellingState() {
+    public BestellingState getInBestellingState(){
         return bestelling.getInBestelling();
     }
+
+
 
     public boolean enoughtoDupe() {
         boolean res = true;
@@ -108,25 +143,58 @@ public class BestelFacade implements Subject {
         return res;
 
     }
+    public void setVerkochtVoorAlleBestelLijnen() {
+        for (Bestellijn lijn: bestelling.getBestellijnList()) {
+            broodjesDatabase.getBroodje(lijn.getNaamBroodje()).setVerkocht(broodjesDatabase.getBroodje(lijn.getNaamBroodje()).getVerkocht()+1);
+            if(lijn.getBelegsoorten() != null && !lijn.getBelegsoorten().equals("")) {
+
+
+            String[] belegLijst = lijn.getBelegsoorten().split(",");
+            Map<String, Integer> itemsinOrder = new TreeMap<>();
+            for (int i = 0; i < belegLijst.length; i++) {
+                if (!itemsinOrder.containsKey(belegLijst[i].trim())) {
+                    itemsinOrder.put(belegLijst[i].trim(), 1);
+                } else {
+                    int xd = itemsinOrder.get(belegLijst[i].trim());
+                    xd++;
+                    itemsinOrder.put(belegLijst[i].trim(), xd);
+                }
+            }
+            for (String beleg: itemsinOrder.keySet()) {
+                belegDatabase.getBeleg(beleg).setVerkocht(belegDatabase.getBeleg(beleg).getVerkocht() + itemsinOrder.get(beleg));
+            }
+
+            }
+
+
+
+        }
+
+        event = BestellingEvents.NAAR_KEUKEN;
+
+    }
 
     public void verwijderLaatsteToegevoegdBroodje() {
         Bestellijn lastBestelling = bestelling.getLastToegevoegdBestelling();
         broodjesDatabase.getBroodje(lastBestelling.getNaamBroodje()).setVoorraad(broodjesDatabase.getBroodje(lastBestelling.getNaamBroodje()).getVoorraad() + 1);
 
-        String[] belegLijst = lastBestelling.getBelegsoorten().split(",");
-        Map<String, Integer> itemsinOrder = new TreeMap<>();
-        for (int i = 0; i < belegLijst.length; i++) {
-            if (!itemsinOrder.containsKey(belegLijst[i].trim())) {
-                itemsinOrder.put(belegLijst[i].trim(), 1);
-            } else {
-                int xd = itemsinOrder.get(belegLijst[i].trim());
-                xd++;
-                itemsinOrder.put(belegLijst[i].trim(), xd);
+        if(lastBestelling.getBelegsoorten() != null && !lastBestelling.getBelegsoorten().equals("")){
+            String[] belegLijst = lastBestelling.getBelegsoorten().split(",");
+            Map<String, Integer> itemsinOrder = new TreeMap<>();
+            for (int i = 0; i < belegLijst.length; i++) {
+                if (!itemsinOrder.containsKey(belegLijst[i].trim())) {
+                    itemsinOrder.put(belegLijst[i].trim(), 1);
+                } else {
+                    int xd = itemsinOrder.get(belegLijst[i].trim());
+                    xd++;
+                    itemsinOrder.put(belegLijst[i].trim(), xd);
+                }
+            }
+            for (String beleg : itemsinOrder.keySet()) {
+                belegDatabase.getBeleg(beleg).setVoorraad(itemsinOrder.get(beleg) + belegDatabase.getBeleg(beleg).getVoorraad());
             }
         }
-        for (String beleg : itemsinOrder.keySet()) {
-            belegDatabase.getBeleg(beleg).setVoorraad(itemsinOrder.get(beleg) + belegDatabase.getBeleg(beleg).getVoorraad());
-        }
+
         bestelling.getBestellijnList().remove(bestelling.getBestellijnList().size() - 1);
         notifyObservers();
 
@@ -136,6 +204,7 @@ public class BestelFacade implements Subject {
         while (bestelling.getBestellijnList().size() > 0) {
             verwijderLaatsteToegevoegdBroodje();
         }
+        volgnr--;
     }
 
     public void voegBestellijnToe(String naamBroodje) {
@@ -149,6 +218,14 @@ public class BestelFacade implements Subject {
         bestelling.voegBelegToe(beleg);
         belegDatabase.getBeleg(beleg).aanpassenVoorraad();
         notifyObservers();
+    }
+
+    public boolean isEvent(BestellingEvents event) {
+        return this.event == event;
+    }
+
+    public BestellingEvents getEvent() {
+        return this.event;
     }
 
 
@@ -203,11 +280,22 @@ public class BestelFacade implements Subject {
         return kortingStrategy.prijsMetKorting(bestelling);
     }
 
+    public void addBestellingToBestelRij(Bestelling bestelling) {
+        bestellingWachtRij.add(bestelling);
+    }
+
+    public Bestelling getBestelling() {
+        return this.bestelling;
+    }
+    public List<Bestelling> getBestellingWachtRij() {
+        return this.bestellingWachtRij;
+    }
+
+
 
     public void setDefaultKorting(String defaultKorting) {
         this.defaultKorting = defaultKorting;
     }
-
     public String getDefaultKorting() {
         return this.defaultKorting;
     }
@@ -228,25 +316,17 @@ public class BestelFacade implements Subject {
         ) {
             switch (event) {
                 case TOEVOEGEN_BROODJE:
+                case LOAD_DATABASE:
                     if (o instanceof AdminController || o instanceof OrderViewController) {
                         o.update(broodjesDatabase, belegDatabase);
                     }
                     break;
-                case LOAD_DATABASE:
-                    if (o instanceof AdminController) {
-                        o.update(broodjesDatabase, belegDatabase);
-                    }
-                    break;
                 case NAAR_KEUKEN:
-                    o.update(broodjesDatabase, belegDatabase);
+                        o.update(broodjesDatabase, belegDatabase);
                     break;
             }
 
 
         }
-    }
-
-    public List<Bestelling> getBestellingWachtRij() {
-        return bestellingWachtRij;
     }
 }

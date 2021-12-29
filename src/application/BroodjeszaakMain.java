@@ -1,5 +1,5 @@
 package application;
-
+	
 import controller.AdminController;
 import controller.KitchenViewController;
 import controller.OrderViewController;
@@ -16,25 +16,27 @@ import java.lang.reflect.InvocationTargetException;
 
 
 public class BroodjeszaakMain extends Application {
+
+
 	@Override
 	public void start(Stage primaryStage) throws IOException, BiffException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 		BestelFacade facade = new BestelFacade();
 		OrderViewController orderViewController = new OrderViewController(facade);
 		AdminController adminController = new AdminController(facade);
+		KitchenViewController kitchenViewController = new KitchenViewController(facade);
 		AdminView adminView = new AdminView(adminController);
-		adminController.initialize();
 
 		OrderView orderView = new OrderView(orderViewController);
+
+
+		KitchenView kitchenView = new KitchenView(kitchenViewController);
 		adminController.initialize();
 		orderViewController.initialize();
-		orderViewController.initialize();
-
-		KitchenViewController kvc = new KitchenViewController(facade);
-		KitchenView kitchenView = new KitchenView(kvc);
-		kvc.initialize();
+		kitchenViewController.initialize();
 	}
-
+	
 	public static void main(String[] args) {
 		launch(args);
+
 	}
 }

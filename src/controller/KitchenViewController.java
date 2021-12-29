@@ -3,80 +3,141 @@ package controller;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import model.*;
+import model.Observer;
 import model.database.BelegDatabase;
 import model.database.BroodjesDatabase;
 import view.KitchenView;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 public class KitchenViewController implements Observer {
     private KitchenView view;
     private BestelFacade facade;
-    private int ordersInQueue;
 
     public KitchenViewController(BestelFacade facade) {
         this.facade = facade;
         facade.registerObserver(this);
+
     }
 
     public void initialize() {
         volgendeBestelling();
-        disableAllButtons();
+        disableKnopen();
         bestellingAfgewerkt();
-    }
-
-    private void disableAllButtons() {
-        //todo disable next order button if no orders in queue
-        if (facade.getBestellingWachtRij().size() == 0) {
-            view.getVolgendeBestelling().setDisable(true);
-        }
     }
 
     public void setView(KitchenView view) {
         this.view = view;
     }
 
-    public void bestellingAfgewerkt() {
+    private void updateWachtRij() {
+        view.getWachtRij().setText("Aantal Bestellingen in de wachtrij: " + facade.getBestellingWachtRij().size());
+        disableKnopen();
+    }
+    private void disableKnopen() {
+
+            view.getVolgendeBestelling().setDisable(facade.getBestellingWachtRij().size() < 1);
+
+    }
+
+    private void bestellingAfgewerkt() {
         view.getBestellingAfgewerkt().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                //todo removing orders from queue will happen after going to next order anyway so no need for it here
-//                facade.getBestellingWachtRij().remove(0);
+                view.getBestellingBeschrijving().setText("Er is momenteel geen bestelling in het keuken\n\n\n");
+                disableKnopen();
                 view.getBestellingAfgewerkt().setDisable(true);
-                view.getOrderDescription().setText("Geen bestelingen te maken");
-                disableAllButtons();
             }
         });
     }
 
-
-    public void volgendeBestelling() {
+    private void volgendeBestelling() {
         view.getVolgendeBestelling().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                List<Bestelling> bestellingenWachtrij = facade.getBestellingWachtRij();
-                List<Bestellijn> bestellijnList = bestellingenWachtrij.get(0).getBestellijnList();
-                String value = "Volgende bestelling: " + bestellingenWachtrij.get(0).getVolgnr() + " - Aantal broodjes: " + bestellijnList.size();
+                List<Bestellijn> bestellijnList = facade.getBestellingWachtRij().get(0).getBestellijnList();
+                String bestellingBeschrijving = "Volgnummer bestelling: " + facade.getBestellingWachtRij().get(0).getVolgnr()+ " - Aantal broodjes: " + bestellijnList.size() + "\n";
 
-                //Todo for real!
+                LinkedHashMap<Bestellijn, Integer> bestellijnen = new LinkedHashMap<>();
 
+                List<Integer> foundIndexes = new ArrayList<>();
+
+                for(int i = 0; i < bestellijnList.size(); i++) {
+                    int aantal = 1;
+                    boolean put = false;
+                    for(int j = i; j < bestellijnList.size(); j++) {
+                        if(bestellijnList.get(i).toString().equals(bestellijnList.get(j).toString()) && i != j && !foundIndexes.contains(i))  {
+                            aantal++;
+                            foundIndexes.add(j);
+                            bestellijnen.put(bestellijnList.get(i), aantal);
+                            put = true;
+                        }
+
+                    }
+                    if(!put && !foundIndexes.contains(i)) {
+                        bestellijnen.put(bestellijnList.get(i), 1);
+                    }
+
+                }
+
+
+                System.out.println(bestellijnen);
+
+
+                for (Bestellijn lijn: bestellijnen.keySet()) {
+                    if(lijn.getBelegsoorten() != null && !lijn.getBelegsoorten().equals("")){
+                    String[] belegLijst = lijn.getBelegsoorten().split(",");
+                    LinkedHashMap<String, Integer> itemsinOrder = new LinkedHashMap<>();
+                    for (int i = 0; i < belegLijst.length; i++) {
+                        if (!itemsinOrder.containsKey(belegLijst[i].trim())) {
+                            itemsinOrder.put(belegLijst[i].trim(), 1);
+                        } else {
+                            int xd = itemsinOrder.get(belegLijst[i].trim());
+                            xd++;
+                            itemsinOrder.put(belegLijst[i].trim(), xd);
+                        }
+                    }
+                    bestellingBeschrijving += "\n" + bestellijnen.get(lijn) + " x " + lijn.getNaamBroodje() + ": ";
+                    List<String> keys = new ArrayList<>(itemsinOrder.keySet());
+                    for (String key: keys) {
+                        if(keys.indexOf(key) != keys.size() - 1) {
+                            if(itemsinOrder.get(key) == 1) {
+                                bestellingBeschrijving += key + ", ";
+                            } else {
+                                bestellingBeschrijving += itemsinOrder.get(key) + " x " + key +", ";
+                            }
+                        } else {
+                            if(itemsinOrder.get(key) == 1) {
+                                bestellingBeschrijving += key;
+                            } else {
+                                bestellingBeschrijving += itemsinOrder.get(key) + " x " + key;
+                            }
+                        }
+
+
+
+
+
+                    }
+                    } else {
+                        bestellingBeschrijving += "\n" + bestellijnen.get(lijn) + " x " + lijn.getNaamBroodje() + ": ";
+                    }
+                }
+
+                view.getBestellingBeschrijving().setText(bestellingBeschrijving);
+                facade.getBestellingWachtRij().remove(0);
+                updateWachtRij();
+                view.getVolgendeBestelling().setDisable(true);
+                view.getBestellingAfgewerkt().setDisable(false);
             }
         });
     }
 
-
-    //todo Observer update Will be invoked when "Naar keuken" button is pressed in the main stage
     @Override
     public void update(BroodjesDatabase broodjeDatabase, BelegDatabase belegDatabase) {
-        if (facade.getEvent().equals(BestellingEvents.NAAR_KEUKEN)){
-            updateQueue();
+        if(facade.isEvent(BestellingEvents.NAAR_KEUKEN)) {
+            updateWachtRij();
         }
-    }
 
-    private void updateQueue() {
-        view.getQueue().setText("Number of orders in queue: " + facade.getBestellingWachtRij().size());
-        disableAllButtons();
     }
 }

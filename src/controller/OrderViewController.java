@@ -9,18 +9,16 @@ import javafx.scene.control.Button;
 import model.*;
 import model.database.BelegDatabase;
 import model.database.BroodjesDatabase;
-import model.kortingStrategies.GeenKorting;
-import model.kortingStrategies.KortingStrategy;
 import model.kortingStrategies.KortingStrategyEnum;
 import view.OrderView;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 public class OrderViewController implements Observer {
     private BestelFacade facade;
     private OrderView view;
     private ObservableList<Bestellijn> bestellijnObservableList;
-    private int volgnr;
 
     public OrderViewController(BestelFacade facade) {
         this.facade = facade;
@@ -43,7 +41,7 @@ public class OrderViewController implements Observer {
         afsluitBestelling();
         betaal();
         naarKeuken();
-        view.getVolgnr().setText("Volgnr: " + volgnr);
+        view.getVolgnr().setText("Volgnr: " + facade.getVolgnr());
 
     }
 
@@ -63,8 +61,7 @@ public class OrderViewController implements Observer {
                 view.getVerwijderBroodje().setDisable(false);
                 facade.setBestellingState(facade.getInBestellingState());
                 voorraadChecker();
-                volgnr++;
-                view.getVolgnr().setText("Volgnr: " + volgnr);
+                view.getVolgnr().setText("Volgnr: " + facade.getVolgnr());
 
             }
         });
@@ -139,6 +136,7 @@ public class OrderViewController implements Observer {
                     a.show();
                 } else {
                     facade.verwijderLaatsteToegevoegdBroodje();
+                    voorraadChecker();
                 }
             }
         });
@@ -155,8 +153,7 @@ public class OrderViewController implements Observer {
                 } else {
                     facade.annuleerBestelling();
                     view.getNieuwBestellingBtn().setDisable(false);
-                    volgnr--;
-                    view.getVolgnr().setText("Volgnr: " + volgnr);
+                    view.getVolgnr().setText("Volgnr: " + facade.getVolgnr());
                     deactivateAllBroodjesEnBelegen();
                     view.getTeBetalen().setText("Te betalen: €0");
                 }
@@ -218,21 +215,45 @@ public class OrderViewController implements Observer {
                 if (korting == null || korting.equals("Geen korting") || korting.isEmpty()) {
                     try {
                         view.getTeBetalen().setText("Te betalen: €" + facade.getPrijsBestelling(KortingStrategyEnum.GEENKORTING));
-                    } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchMethodException e) {
+                        e.printStackTrace();
+                    } catch (InstantiationException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     }
                 }
                 if (korting != null && korting.equals("Goedkoopste broodje gratis")) {
                     try {
                         view.getTeBetalen().setText("Te betalen: €" + facade.getPrijsBestelling(KortingStrategyEnum.KORTINGCHEAPESTSANWICH));
-                    } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchMethodException e) {
+                        e.printStackTrace();
+                    } catch (InstantiationException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     }
                 }
                 if (korting != null && korting.equals("10% korting op bestelling")) {
                     try {
                         view.getTeBetalen().setText("Te betalen: €" + facade.getPrijsBestelling(KortingStrategyEnum.KORTINGTIENPERCENT));
-                    } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchMethodException e) {
+                        e.printStackTrace();
+                    } catch (InstantiationException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     }
                 }
@@ -259,19 +280,20 @@ public class OrderViewController implements Observer {
         });
     }
 
-    //todo fix stuff here
     private void naarKeuken() {
         view.getNaarKeuken().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Bestelling bestelling = new Bestelling();
-                bestelling.setBestellijnList(facade.getLijstBestellijnen());
-                bestelling.setVolgnr(volgnr);
-                facade.getBestellingWachtRij().add(bestelling);
-                facade.nieuwBestelling();
+                facade.setVerkochtVoorAlleBestelLijnen();
+                facade.addBestellingToBestelRij(facade.getBestelling());
+                facade.setBestelling(new Bestelling());
+
                 view.getNieuwBestellingBtn().setDisable(false);
                 view.getNaarKeuken().setDisable(true);
                 facade.notifyObservers();
+                facade.save();
+
+
             }
         });
     }

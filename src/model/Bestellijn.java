@@ -41,4 +41,19 @@ public class Bestellijn {
     public void setPrijs(double prijs) {
         this.prijs = prijs;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o == null) return false;
+        if(!(o instanceof Bestellijn)) return false;
+        if(this.belegsoorten == null || this.belegsoorten.trim().isEmpty()) return false;
+
+        Bestellijn b = (Bestellijn) o;
+        return this.naamBroodje.equals(b.naamBroodje) && this.belegsoorten.equals(b.belegsoorten);
+    }
+
+    @Override
+    public String toString() {
+        return this.naamBroodje + this.belegsoorten;
+    }
 }

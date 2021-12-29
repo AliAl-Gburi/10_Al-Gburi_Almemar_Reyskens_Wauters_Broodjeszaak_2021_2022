@@ -18,7 +18,7 @@ import java.util.TreeMap;
 
 public class BelegDatabase{
 
-    private Map<String, BelegSoort> belegMap;
+    public Map<String, BelegSoort> belegMap;
     private List<BelegSoort> belegen;
     private LoadSaveStrategy strategy;
     private static BelegDatabase database;
@@ -32,6 +32,12 @@ public class BelegDatabase{
     public List<BelegSoort> getBelegen() {
         return this.belegen;
     }
+
+    public void save(File file, Map db) throws IOException {
+        strategy.save(file, db);
+    }
+
+
 
     public static BelegDatabase getInstance(File file, LoadSaveStrategyEnum loadSaveStrategyEnum) throws BiffException, IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         if(database == null) {

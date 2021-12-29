@@ -5,9 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.chart.XYChart;
-import model.BelegSoort;
-import model.BestelFacade;
-import model.Broodje;
+import model.*;
 import model.Observer;
 import model.database.BelegDatabase;
 import model.database.BroodjesDatabase;
@@ -115,6 +113,8 @@ public class AdminController implements Observer {
 
     }
 
+
+
     @Override
     public void update(BroodjesDatabase broodjeDatabase, BelegDatabase belegDatabase) {
         observableBroodjeList = FXCollections.observableArrayList(broodjeDatabase.getBroodjesList());
@@ -124,5 +124,11 @@ public class AdminController implements Observer {
         observableBelegsoortenList = FXCollections.observableArrayList(belegDatabase.getBelegen());
         view.getAdminMainPane().getSandwichOverviewPane().getBelegtable().setItems(observableBelegsoortenList);
         view.getAdminMainPane().getSandwichOverviewPane().getBelegtable().refresh();
+
+        if(facade.isEvent(BestellingEvents.NAAR_KEUKEN)) {
+            loadStatistiek();
+        }
+
+
     }
 }

@@ -21,12 +21,19 @@ public abstract class TekstLoadSaveTemplate <K,V>{
         return returnMap;
     }
 
-    public void save(File file, Map db) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-        for (Object value: db.values()) {
-            writer.write(value.toString());
-            writer.newLine();
+    public void save(File file, Map<K,V> db) throws IOException {
+        try {
+            FileWriter myWriter = new FileWriter(file);
+            for (V value: db.values()) {
+                myWriter.write(value.toString());
+                myWriter.write("\n");
+            }
+            myWriter.close();
+
+        } catch (IOException e) {
+
         }
+
     }
 
     public abstract V maakObject(String[] tokens);
