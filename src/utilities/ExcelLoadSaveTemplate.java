@@ -37,13 +37,7 @@ public abstract class ExcelLoadSaveTemplate<K,V>{
             res.add(arraylist);
         }try {
             excelPlugin.write(file, res);
-        } catch (BiffException e) {
-            e.printStackTrace();
-        } catch (RowsExceededException e) {
-            e.printStackTrace();
-        } catch (WriteException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (BiffException | WriteException | IOException e) {
             e.printStackTrace();
         }
 

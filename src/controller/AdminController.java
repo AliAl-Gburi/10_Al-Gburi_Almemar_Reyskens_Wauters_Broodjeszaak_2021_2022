@@ -54,8 +54,6 @@ public class AdminController implements Observer {
             view.getAdminMainPane().getSettingsPane().getFileFormat().getSelectionModel().select(dbFormat);
             view.getAdminMainPane().getSettingsPane().getKortingsList().getSelectionModel().select(kortingString);
             facade.setDefaultKorting(kortingString);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -82,8 +80,6 @@ public class AdminController implements Observer {
                     os.close();
                     view.getAdminMainPane().getSettingsPane().getSaveLabel().setText("Your setting have been saved");
                     facade.notifyObservers();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

@@ -21,7 +21,7 @@ public abstract class TekstLoadSaveTemplate <K,V>{
         return returnMap;
     }
 
-    public void save(File file, Map<K,V> db) throws IOException {
+    public void save(File file, Map<K,V> db) {
         try {
             FileWriter myWriter = new FileWriter(file);
             for (V value: db.values()) {
@@ -30,7 +30,7 @@ public abstract class TekstLoadSaveTemplate <K,V>{
             }
             myWriter.close();
 
-        } catch (IOException e) {
+        } catch (IOException ignored) {
 
         }
 
