@@ -21,8 +21,8 @@ public class KitchenView {
 	
 	private Stage stage = new Stage();
 	private Button volgendeBestelling;
-	private Button bestellingAfgewerken;
-	private List<Bestelling> bestellingen;
+	private Button bestellingAfgewerkt;
+
 
 	
 	public KitchenView(){			
@@ -42,8 +42,8 @@ public class KitchenView {
 		volgendeBestelling = new Button("Volgende bestelling");
 		volgendeBestelling.setDisable(true);
 
-		bestellingAfgewerken = new Button("Bestelling afwerken");
-		bestellingAfgewerken.setDisable(false);
+		bestellingAfgewerkt = new Button("Bestelling afwerken");
+		bestellingAfgewerkt.setDisable(false);
 
 		return mainBox;
 	}
@@ -56,11 +56,7 @@ public class KitchenView {
 		return volgendeBestelling;
 	}
 
-	public Button getBestellingAfgewerken() {
-		return bestellingAfgewerken;
-	}
-
-	public List<Bestelling> getBestellingen() {
-		return bestellingen;
+	public Button getBestellingAfgewerkt() {
+		return bestellingAfgewerkt;
 	}
 }

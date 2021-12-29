@@ -263,8 +263,12 @@ public class OrderViewController implements Observer {
         view.getNaarKeuken().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                Bestelling bestelling = new Bestelling();
+                bestelling.setBestellijnList(facade.getLijstBestellijnen());
+                bestelling.setVolgnr(volgnr);
+                facade.getBestellingWachtRij().add(bestelling);
                 facade.nieuwBestelling();
-                
+
                 view.getNieuwBestellingBtn().setDisable(false);
                 view.getNaarKeuken().setDisable(true);
                 facade.notifyObservers();

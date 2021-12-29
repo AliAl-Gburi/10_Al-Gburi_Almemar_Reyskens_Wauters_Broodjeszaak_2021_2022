@@ -11,6 +11,7 @@ public class Bestelling {
     private List<Bestellijn> bestellijnList;
     private BestellingState inWacht;
     private BestellingState inBestelling;
+    private int volgnr;
 
     private BestellingState state;
 
@@ -19,6 +20,14 @@ public class Bestelling {
         inBestelling = new InBestelling(this);
         state = inWacht;
         bestellijnList = new ArrayList<>();
+    }
+
+    public int getVolgnr() {
+        return volgnr;
+    }
+
+    public void setVolgnr(int volgnr) {
+        this.volgnr = volgnr;
     }
 
     public void setState(BestellingState state) {
@@ -35,6 +44,10 @@ public class Bestelling {
 
     public BestellingState getState() {
         return this.state;
+    }
+
+    public void setBestellijnList(List<Bestellijn> bestellijnList) {
+        this.bestellijnList = bestellijnList;
     }
 
     public void voegBestelLijnToe(String naamBroodje) {

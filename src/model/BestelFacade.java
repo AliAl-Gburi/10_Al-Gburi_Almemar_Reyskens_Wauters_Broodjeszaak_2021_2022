@@ -238,4 +238,8 @@ public class BestelFacade implements Subject {
 
         }
     }
+
+    public List<Bestelling> getBestellingWachtRij() {
+        return bestellingWachtRij;
+    }
 }
